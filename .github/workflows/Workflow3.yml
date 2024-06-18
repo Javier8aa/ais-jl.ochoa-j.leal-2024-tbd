@@ -1,9 +1,10 @@
-name: Release Deployment
+name: Workflow3_Docker_Azure
 
 on:
   create:
     branches:
       - release/**
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
