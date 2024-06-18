@@ -21,7 +21,7 @@ public class FilmServiceUnitaryTest {
     private NotificationService notificationService;
     private FilmRepository repository;
     private UrlUtils urlUtils;
-    
+
     @Test
     @DisplayName("Cuando se guarda una película (con una URL correcta) utilizando FilmService, se guarda en el repositorio y se lanza una notificación")
     public void createFilm() {
