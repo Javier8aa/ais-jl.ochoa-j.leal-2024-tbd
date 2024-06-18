@@ -15,7 +15,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'adopt'
-          java-version: '11'
+          java-version: '17'
 
       - name: 'Generate Tag'
         run: echo "tag=$(mvn -q help:evaluate -Dexpression=project.version -DforceStdout)" >> $GITHUB_OUTPUT
