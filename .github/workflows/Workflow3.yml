@@ -6,6 +6,10 @@ on:
       - release/**
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -22,9 +26,7 @@ jobs:
         id: project
 
       - name: 'Generate Docker image'
-        run: |
-          mvn spring-boot:build-image -DskipTests
-                -Dspring-boot.build-image.imageName=${{ secrets.DOCKERHUB_USERNAME }}/nitflex:${{ steps.project.outputs.tag }}
+        run: mvn spring-boot:build-image -DskipTests -Dspring-boot.build-image.imageName=${{ secrets.DOCKERHUB_USERNAME }}/nitflex:${{ steps.project.outputs.tag }}
 
       - name: 'Login to DockerHub'
         run: docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_TOKEN }}"
