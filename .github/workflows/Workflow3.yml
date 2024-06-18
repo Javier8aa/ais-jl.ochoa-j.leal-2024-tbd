@@ -24,8 +24,7 @@ jobs:
       - name: 'Generate Docker image'
         run: |
           mvn spring-boot:build-image -DskipTests
-                -Dspring-boot.build-image.imageName=
-                      ${{ secrets.DOCKERHUB_USERNAME }}/nitflex:${{ steps.project.outputs.tag }}
+                -Dspring-boot.build-image.imageName=${{ secrets.DOCKERHUB_USERNAME }}/nitflex:${{ steps.project.outputs.tag }}
 
       - name: 'Login to DockerHub'
         run: docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_TOKEN }}"
