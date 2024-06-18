@@ -6,12 +6,18 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +26,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import es.codeurjc.ais.nitflex.Application;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class FilmUITest {
@@ -31,10 +36,8 @@ public class FilmUITest {
     protected WebDriverWait wait;
 
     @BeforeEach
-    public void setupClass() {
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
-        driver = new ChromeDriver(options);
+    public void setupClass(String browser) {
+        driver = createWebDriver(browser);
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(2));
     }
 
@@ -45,12 +48,35 @@ public class FilmUITest {
         }
     }
 
-    @Test
+    private WebDriver createWebDriver(String browser) {
+        switch (browser.toLowerCase()) {
+            case "chrome":
+                ChromeOptions chromeOptions = new ChromeOptions();
+                chromeOptions.addArguments("--headless");
+                return new ChromeDriver(chromeOptions);
+            case "firefox":
+                FirefoxOptions firefoxOptions = new FirefoxOptions();
+                firefoxOptions.addArguments("--headless");
+                return new FirefoxDriver(firefoxOptions);
+            case "edge":
+                EdgeOptions edgeOptions = new EdgeOptions();
+                edgeOptions.addArguments("--headless");
+                return new EdgeDriver(edgeOptions);
+            case "safari":
+                return new SafariDriver();  // Safari doesn't support headless mode yet
+            default:
+                throw new IllegalArgumentException("Unsupported browser: " + browser);
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"chrome", "firefox", "edge", "safari"})
     @DisplayName("Añadir una nueva película y comprobar que se ha creado")
-    public void createFilmTest() throws Exception {
+    public void createFilmTest(String browser) throws Exception {
+        setupClass(browser);
 
         // GIVEN: Partiendo de que estamos en la página principal de la web
-        this.driver.get("http://localhost:"+this.port+"/");
+        this.driver.get("http://localhost:" + this.port + "/");
 
         // WHEN: Creamos un nueva película
 
@@ -73,9 +99,13 @@ public class FilmUITest {
 
         this.wait.until(ExpectedConditions.textToBe(By.id("film-title"), title));
     }
-    @Test
-    public void testGuardar() {
-        driver.get("http://localhost:"+this.port+"/"); // Accedemos a la pagina web de nuestra aplicación
+
+    @ParameterizedTest
+    @ValueSource(strings = {"chrome", "firefox", "edge", "safari"})
+    public void testGuardar(String browser) {
+        setupClass(browser);
+
+        driver.get("http://localhost:" + this.port + "/"); // Accedemos a la pagina web de nuestra aplicación
         driver.findElement(By.id("create-film")).click(); //Localizamos y clicamos new film
 
         WebElement titulo = driver.findElement(By.name("title")); //Recoge en la variable titulo el contenido del elemento titulo
@@ -86,15 +116,18 @@ public class FilmUITest {
         driver.findElement(By.id("Save")).click();//Localizamos y clicamos save
 
         WebElement tituloGuardado = driver.findElement(By.id("film-title"));
-        assertEquals("La Vida De Pi",tituloGuardado.getText());
+        assertEquals("La Vida De Pi", tituloGuardado.getText());
 
         driver.findElement(By.id("all-films")).click();
         assertNotNull(driver.findElement(By.partialLinkText("La Vida De Pi")));
     }
 
-    @Test
-    public void testBorrar(){
-        driver.get("http://localhost:"+this.port+"/"); // Accedemos a la pagina web de nuestra aplicación
+    @ParameterizedTest
+    @ValueSource(strings = {"chrome", "firefox", "edge", "safari"})
+    public void testBorrar(String browser) {
+        setupClass(browser);
+
+        driver.get("http://localhost:" + this.port + "/"); // Accedemos a la pagina web de nuestra aplicación
         //Creamos una pelicula y volvemos a all films
 
         driver.findElement(By.id("create-film")).click(); //Localizamos y clicamos new film
@@ -113,5 +146,4 @@ public class FilmUITest {
         List<WebElement> peliculaBorrada = driver.findElements(By.partialLinkText("Interestelar"));
         assertTrue(peliculaBorrada.isEmpty());
     }
-
 }
