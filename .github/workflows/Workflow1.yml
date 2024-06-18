@@ -1,0 +1,29 @@
+name: Workflow1_Commit_no_TrunkRelease
+
+on:
+  push:
+    branches-ignore:
+      - trunk
+      - release
+    paths:
+      - 'src/**'
+      - 'pom.xml'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - name: Integracion Test
+        run: mvn -Dtest=es.codeurjc.ais.nitflex.integration.UrlUtilsIntegrationTest test
+      - name: Unitary Test
+        run: mvn -Dtest=es.codeurjc.ais.nitflex.unitary.FilmServiceUnitaryTest test
