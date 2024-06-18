@@ -1,0 +1,37 @@
+name: Workflow4_CronTrunk
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Each night
+  workflow_dispatch:
+
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        browser: [chrome, firefox, edge, safari]
+        exclude:
+          - os: macos-latest
+            browser: edge
+          - os: ubuntu-latest
+            browser: edge
+          - os: ubuntu-latest
+            browser: safari
+          - os: windows-latest
+            browser: safari
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - name: E2E test
+        run: mvn test -Dtest="es.codeurjc.ais.nitflex.e2e.selenium.FilmUITest" -Dbrowser=${{ matrix.browser }}
