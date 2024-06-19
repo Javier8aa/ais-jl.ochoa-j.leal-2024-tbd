@@ -22,10 +22,15 @@ jobs:
           java-version: '17'
 
       - name: 'Generate Tag'
+        id: generate_tag
         run: |
           tag=$(mvn -q help:evaluate -Dexpression=project.version -DforceStdout)
           echo "Tag generated: $tag"
-          echo "tag=$tag" >> $GITHUB_ENV
+          if [[ -z "$tag" ]]; then
+            echo "Tag is empty. Exiting."
+            exit 1
+          fi
+          echo "::set-output name=tag::$tag"
 
       - name: 'Generate Docker image'
         run: mvn spring-boot:build-image -DskipTests -Dspring-boot.build-image.imageName=${{ secrets.DOCKERHUB_USERNAME }}/nitflex:${{ steps.project.outputs.tag }}
@@ -33,7 +38,7 @@ jobs:
       - name: 'Login to DockerHub'
         run: docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_TOKEN }}"
       - name: 'Push image to DockerHub'
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/nitflex:${{ env.tag }}
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/nitflex:${{ steps.generate_tag.outputs.tag }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -51,11 +56,9 @@ jobs:
           az container create \
             --resource-group ${{ secrets.AZURE_GROUP }} \
             --name nitflex \
-            --image ${{ secrets.DOCKERHUB_USERNAME }}/nitflex:${{ steps.project.outputs.tag }} \
+            --image ${{ secrets.DOCKERHUB_USERNAME }}/nitflex:${{ steps.generate_tag.outputs.tag }} \
             --dns-name-label nitflex-jljlo \
-            --ports 8080 \
-            --registry-username ${{ secrets.DOCKERHUB_USERNAME }} \
-            --registry-password ${{ secrets.DOCKERHUB_TOKEN }}
+            --ports 8080
   test:
     runs-on: ubuntu-latest
     name: 'Run Smoke Test'
