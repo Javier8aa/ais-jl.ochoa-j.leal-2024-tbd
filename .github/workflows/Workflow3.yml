@@ -51,7 +51,9 @@ jobs:
             --name nitflex \
             --image ${{ secrets.DOCKERHUB_USERNAME }}/nitflex:${{ steps.project.outputs.tag }} \
             --dns-name-label nitflex-jljlo \
-            --ports 8080
+            --ports 8080 \
+            --registry-username ${{ secrets.DOCKERHUB_USERNAME }} \
+            --registry-password ${{ secrets.DOCKERHUB_TOKEN }}
   test:
     runs-on: ubuntu-latest
     name: 'Run Smoke Test'
