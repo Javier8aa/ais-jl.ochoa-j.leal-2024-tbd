@@ -18,6 +18,10 @@ jobs:
             browser: edge
           - os: ubuntu-latest
             browser: edge
+          - os: ubuntu-latest
+            browser: safari
+          - os: windows-latest
+            browser: safari
 
     steps:
       - name: Checkout code
