@@ -119,6 +119,7 @@ public class FilmUITest {
         driver.findElement(By.name("synopsis")).sendKeys("Tras un naufragio, Pi, hijo de un guarda de zoo, se encuentra en un bote salvavidas con un único superviviente, un tigre de bengala.");
         driver.findElement(By.id("Save")).click();
 
+        wait.until(ExpectedConditions.textToBe(By.id("film-title"), "La Vida De Pi"));
         WebElement tituloGuardado = driver.findElement(By.id("film-title"));
         assertEquals("La Vida De Pi", tituloGuardado.getText());
 
