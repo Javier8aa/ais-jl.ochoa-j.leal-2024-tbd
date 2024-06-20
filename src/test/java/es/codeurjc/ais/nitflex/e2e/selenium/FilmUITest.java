@@ -36,8 +36,7 @@ public class FilmUITest {
     protected WebDriverWait wait;
 
     @BeforeEach
-    public void setupClass(String browser) {
-        driver = createWebDriver(browser);
+    public void setup() {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(2));
     }
 
@@ -73,7 +72,8 @@ public class FilmUITest {
     @ValueSource(strings = {"chrome", "firefox", "edge", "safari"})
     @DisplayName("Añadir una nueva película y comprobar que se ha creado")
     public void createFilmTest(String browser) throws Exception {
-        setupClass(browser);
+        driver = createWebDriver(browser);
+        setup();
 
         // GIVEN: Partiendo de que estamos en la página principal de la web
         this.driver.get("http://localhost:" + this.port + "/");
@@ -103,7 +103,8 @@ public class FilmUITest {
     @ParameterizedTest
     @ValueSource(strings = {"chrome", "firefox", "edge", "safari"})
     public void testGuardar(String browser) {
-        setupClass(browser);
+        driver = createWebDriver(browser);
+        setup();
 
         driver.get("http://localhost:" + this.port + "/"); // Accedemos a la pagina web de nuestra aplicación
         driver.findElement(By.id("create-film")).click(); //Localizamos y clicamos new film
@@ -125,7 +126,8 @@ public class FilmUITest {
     @ParameterizedTest
     @ValueSource(strings = {"chrome", "firefox", "edge", "safari"})
     public void testBorrar(String browser) {
-        setupClass(browser);
+        driver = createWebDriver(browser);
+        setup();
 
         driver.get("http://localhost:" + this.port + "/"); // Accedemos a la pagina web de nuestra aplicación
         //Creamos una pelicula y volvemos a all films

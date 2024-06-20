@@ -5,7 +5,6 @@ on:
     - cron: '0 0 * * *'  # Each night
   workflow_dispatch:
 
-
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -23,6 +22,7 @@ jobs:
             browser: safari
           - os: windows-latest
             browser: safari
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -33,5 +33,41 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
 
-      - name: E2E test
+      - name: Setup Chrome Driver
+        if: matrix.browser == 'chrome'
+        run: |
+          if [ $RUNNER_OS == 'Linux' ]; then
+            sudo apt-get install -y chromium-browser
+          elif [ $RUNNER_OS == 'Windows' ]; then
+            choco install chromedriver
+          elif [ $RUNNER_OS == 'macOS' ]; then
+            brew install chromedriver
+          fi
+
+      - name: Setup Firefox Driver
+        if: matrix.browser == 'firefox'
+        run: |
+          if [ $RUNNER_OS == 'Linux' ]; then
+            sudo apt-get install -y firefox
+          elif [ $RUNNER_OS == 'Windows' ]; then
+            choco install geckodriver
+          elif [ $RUNNER_OS == 'macOS' ]; then
+            brew install geckodriver
+          fi
+
+      - name: Setup Edge Driver
+        if: matrix.browser == 'edge'
+        run: |
+          if [ $RUNNER_OS == 'Windows' ]; then
+            choco install msedgedriver
+          fi
+
+      - name: Setup Safari Driver
+        if: matrix.browser == 'safari'
+        run: |
+          if [ $RUNNER_OS == 'macOS' ]; then
+            sudo safaridriver --enable
+          fi
+
+      - name: Run E2E Test
         run: mvn test -Dtest="es.codeurjc.ais.nitflex.e2e.selenium.FilmUITest" -Dbrowser=${{ matrix.browser }}
