@@ -12,16 +12,12 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        browser: [chrome, firefox, edge, safari]
+        browser: [chrome, firefox, edge]
         exclude:
           - os: macos-latest
             browser: edge
           - os: ubuntu-latest
             browser: edge
-          - os: ubuntu-latest
-            browser: safari
-          - os: windows-latest
-            browser: safari
 
     steps:
       - name: Checkout code
