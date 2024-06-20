@@ -6,8 +6,7 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -36,10 +35,41 @@ public class FilmUITest {
     protected WebDriverWait wait;
 
     @BeforeEach
-    public void setup() {
-        if (driver != null) {
-            this.wait = new WebDriverWait(driver, Duration.ofSeconds(2));
+    public void setupClass() {
+        String browser = System.getenv("BROWSER");
+        System.out.println(browser);
+
+        if (browser == null) {
+            throw new IllegalArgumentException("BROWSER environment variable not set");
         }
+
+        switch (browser.toLowerCase()) {
+            case "chrome":
+                ChromeOptions chromeOptions = new ChromeOptions();
+                chromeOptions.addArguments("--headless");
+                driver = new ChromeDriver(chromeOptions);
+                break;
+            case "firefox":
+                FirefoxOptions firefoxOptions = new FirefoxOptions();
+                firefoxOptions.addArguments("--headless");
+                driver = new FirefoxDriver(firefoxOptions);
+                break;
+            case "edge":
+                EdgeOptions edgeOptions = new EdgeOptions();
+                edgeOptions.addArguments("--headless");
+                driver = new EdgeDriver(edgeOptions);
+                break;
+            case "safari":
+                if (!System.getProperty("os.name").toLowerCase().contains("mac")) {
+                    throw new IllegalArgumentException("Safari is only supported on macOS");
+                }
+                driver = new SafariDriver();  // Safari doesn't support headless mode yet
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported browser: " + browser);
+        }
+
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(2));
     }
 
     @AfterEach
@@ -49,34 +79,9 @@ public class FilmUITest {
         }
     }
 
-    private WebDriver createWebDriver(String browser) {
-        switch (browser.toLowerCase()) {
-            case "chrome":
-                ChromeOptions chromeOptions = new ChromeOptions();
-                chromeOptions.addArguments("--headless");
-                return new ChromeDriver(chromeOptions);
-            case "firefox":
-                FirefoxOptions firefoxOptions = new FirefoxOptions();
-                firefoxOptions.addArguments("--headless");
-                return new FirefoxDriver(firefoxOptions);
-            case "edge":
-                EdgeOptions edgeOptions = new EdgeOptions();
-                edgeOptions.addArguments("--headless");
-                return new EdgeDriver(edgeOptions);
-            case "safari":
-                return new SafariDriver();  // Safari doesn't support headless mode yet
-            default:
-                throw new IllegalArgumentException("Unsupported browser: " + browser);
-        }
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"chrome", "firefox", "edge", "safari"})
+    @Test
     @DisplayName("Añadir una nueva película y comprobar que se ha creado")
-    public void createFilmTest(String browser) throws Exception {
-        driver = createWebDriver(browser);
-        setup();
-
+    public void createFilmTest() throws Exception {
         // GIVEN: Partiendo de que estamos en la página principal de la web
         this.driver.get("http://localhost:" + this.port + "/");
 
@@ -100,12 +105,8 @@ public class FilmUITest {
         this.wait.until(ExpectedConditions.textToBe(By.id("film-title"), title));
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"chrome", "firefox", "edge", "safari"})
-    public void testGuardar(String browser) {
-        driver = createWebDriver(browser);
-        setup();
-
+    @Test
+    public void testGuardar() {
         driver.get("http://localhost:" + this.port + "/"); // Accedemos a la pagina web de nuestra aplicación
         driver.findElement(By.id("create-film")).click(); //Localizamos y clicamos new film
 
@@ -123,12 +124,8 @@ public class FilmUITest {
         assertNotNull(driver.findElement(By.partialLinkText("La Vida De Pi")));
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"chrome", "firefox", "edge", "safari"})
-    public void testBorrar(String browser) {
-        driver = createWebDriver(browser);
-        setup();
-
+    @Test
+    public void testBorrar() {
         driver.get("http://localhost:" + this.port + "/"); // Accedemos a la pagina web de nuestra aplicación
         //Creamos una pelicula y volvemos a all films
 

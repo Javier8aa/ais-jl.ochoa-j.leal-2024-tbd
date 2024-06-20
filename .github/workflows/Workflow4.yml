@@ -12,16 +12,16 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        browser: [chrome, firefox, edge]
+        browser: [chrome, firefox, edge, safari]
         exclude:
-          - os: macos-latest
-            browser: edge
           - os: ubuntu-latest
             browser: edge
           - os: ubuntu-latest
             browser: safari
           - os: windows-latest
             browser: safari
+          - os: macos-latest
+            browser: edge
 
     steps:
       - name: Checkout code
@@ -34,4 +34,6 @@ jobs:
           java-version: '17'
 
       - name: Run E2E Test
-        run: mvn test -Dtest="es.codeurjc.ais.nitflex.e2e.selenium.FilmUITest" -Dbrowser=${{ matrix.browser }}
+        run: mvn test -Dtest="es.codeurjc.ais.nitflex.e2e.selenium.FilmUITest"
+        env:
+          BROWSER: ${{ matrix.browser }}
