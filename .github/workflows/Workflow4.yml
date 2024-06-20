@@ -2,7 +2,7 @@ name: Workflow4_CronTrunk
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Each night
+    - cron: '0 0 * * *'  # Each night 00:00
   workflow_dispatch:
 
 jobs:
