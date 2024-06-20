@@ -37,7 +37,7 @@ public class FilmUITest {
     @BeforeEach
     public void setupClass() {
         String browser = System.getenv("BROWSER");
-        System.out.println(browser);
+        System.out.println("El browser que se está recogiendo es: " + browser);
 
         if (browser == null) {
             throw new IllegalArgumentException("BROWSER environment variable not set");
@@ -69,7 +69,7 @@ public class FilmUITest {
                 throw new IllegalArgumentException("Unsupported browser: " + browser);
         }
 
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(2));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10)); // Aumentamos el tiempo de espera a 10 segundos
     }
 
     @AfterEach
@@ -93,7 +93,9 @@ public class FilmUITest {
 
         // Hacemos click en "New film"
         driver.findElement(By.xpath("//*[text()='New film']")).click();
-        // Rellenamos el formulario
+
+        // Rellenamos el formulario esperando a que aparezca el elemento 'title'
+        wait.until(ExpectedConditions.elementToBeClickable(By.name("title")));
         driver.findElement(By.name("title")).sendKeys(title);
         driver.findElement(By.name("url")).sendKeys(url);
         driver.findElement(By.name("releaseYear")).sendKeys(year);
@@ -102,20 +104,20 @@ public class FilmUITest {
         driver.findElement(By.id("Save")).click();
 
         // THEN: Esperamos que la película creada aparezca en la nueva página resultante
-        this.wait.until(ExpectedConditions.textToBe(By.id("film-title"), title));
+        wait.until(ExpectedConditions.textToBe(By.id("film-title"), title));
     }
 
     @Test
     public void testGuardar() {
-        driver.get("http://localhost:" + this.port + "/"); // Accedemos a la pagina web de nuestra aplicación
-        driver.findElement(By.id("create-film")).click(); //Localizamos y clicamos new film
+        driver.get("http://localhost:" + this.port + "/");
+        driver.findElement(By.id("create-film")).click();
 
-        WebElement titulo = driver.findElement(By.name("title")); //Recoge en la variable titulo el contenido del elemento titulo
+        WebElement titulo = driver.findElement(By.name("title"));
         titulo.sendKeys("La Vida De Pi");
-        driver.findElement(By.name("releaseYear")).sendKeys("2012"); //Localiza y rellena el elemento con nombre releaseYear
-        driver.findElement(By.name("url")).sendKeys("https://es.web.img3.acsta.net/medias/nmedia/18/91/30/40/20328542.jpg");//Localiza y rellena el elemento con nombre url
-        driver.findElement(By.name("synopsis")).sendKeys("Tras un naufragio, Pi, hijo de un guarda de zoo, se encuentra en un bote salvavidas con un único superviviente, un tigre de bengala.");//Localiza y rellena el elemento con nombre synopsis
-        driver.findElement(By.id("Save")).click();//Localizamos y clicamos save
+        driver.findElement(By.name("releaseYear")).sendKeys("2012");
+        driver.findElement(By.name("url")).sendKeys("https://es.web.img3.acsta.net/medias/nmedia/18/91/30/40/20328542.jpg");
+        driver.findElement(By.name("synopsis")).sendKeys("Tras un naufragio, Pi, hijo de un guarda de zoo, se encuentra en un bote salvavidas con un único superviviente, un tigre de bengala.");
+        driver.findElement(By.id("Save")).click();
 
         WebElement tituloGuardado = driver.findElement(By.id("film-title"));
         assertEquals("La Vida De Pi", tituloGuardado.getText());
@@ -126,19 +128,19 @@ public class FilmUITest {
 
     @Test
     public void testBorrar() {
-        driver.get("http://localhost:" + this.port + "/"); // Accedemos a la pagina web de nuestra aplicación
-        //Creamos una pelicula y volvemos a all films
-
-        driver.findElement(By.id("create-film")).click(); //Localizamos y clicamos new film
-        driver.findElement(By.name("title")).sendKeys("Interestelar"); //Recoge en la variable titulo el contenido del elemento titulo
-        driver.findElement(By.name("releaseYear")).sendKeys("2014"); //Localiza y rellena el elemento con nombre releaseYear
-        driver.findElement(By.name("url")).sendKeys("https://m.media-amazon.com/images/S/pv-target-images/79194981293eabf6620ece96eb5a9c1fffa04d3374ae12986e0748800b37b9cf.jpg");//Localiza y rellena el elemento con nombre url
-        driver.findElement(By.name("synopsis")).sendKeys("Un grupo de científicos y exploradores, encabezados por Cooper, se embarcan en un viaje espacial para encontrar un lugar con las condiciones necesarias para reemplazar a la Tierra y comenzar una nueva vida allí");//Localiza y rellena el elemento con nombre synopsis
-        driver.findElement(By.id("Save")).click();//Localizamos y clicamos save
+        driver.get("http://localhost:" + this.port + "/");
+        driver.findElement(By.id("create-film")).click();
+        driver.findElement(By.name("title")).sendKeys("Interestelar");
+        driver.findElement(By.name("releaseYear")).sendKeys("2014");
+        driver.findElement(By.name("url")).sendKeys("https://m.media-amazon.com/images/S/pv-target-images/79194981293eabf6620ece96eb5a9c1fffa04d3374ae12986e0748800b37b9cf.jpg");
+        driver.findElement(By.name("synopsis")).sendKeys("Un grupo de científicos y exploradores, encabezados por Cooper, se embarcan en un viaje espacial para encontrar un lugar con las condiciones necesarias para reemplazar a la Tierra y comenzar una nueva vida allí.");
+        driver.findElement(By.id("Save")).click();
         driver.findElement(By.id("all-films")).click();
 
-        //Borramos la película
+        // Esperamos a que aparezca el enlace a la película antes de hacer clic en él
+        wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Interestelar")));
         driver.findElement(By.partialLinkText("Interestelar")).click();
+
         driver.findElement(By.id("remove-film")).click();
         assertEquals("Film 'Interestelar' deleted", driver.findElement(By.id("message")).getText());
         driver.findElement(By.id("all-films")).click();
