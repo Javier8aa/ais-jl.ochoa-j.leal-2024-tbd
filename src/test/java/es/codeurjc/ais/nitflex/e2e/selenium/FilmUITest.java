@@ -36,7 +36,7 @@ public class FilmUITest {
 
     @BeforeEach
     public void setupClass() {
-        String browser = System.getenv("BROWSER");
+        String browser = System.getProperty("browser");
 
         if (browser == null) {
             throw new IllegalArgumentException("BROWSER environment variable not set");
@@ -60,12 +60,13 @@ public class FilmUITest {
                 break;
             case "safari":
                 driver = new SafariDriver();
+                this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported browser: " + browser);
         }
 
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(25));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
     @AfterEach
@@ -78,26 +79,24 @@ public class FilmUITest {
     @Test
     @DisplayName("Añadir una nueva película y comprobar que se ha creado")
     public void createFilmTest() throws Exception {
-        // GIVEN: Partiendo de que estamos en la página principal de la web
+        // GIVEN
         this.driver.get("http://localhost:" + this.port + "/");
 
-        // WHEN: Creamos un nueva película
+        // WHEN
         String title = "Spider-Man: No Way Home";
         String synopsis = "Peter Parker es desenmascarado y por tanto no es capaz de separar su vida normal de los enormes riesgos que conlleva ser un súper héroe.";
         String url = "https://www.themoviedb.org/t/p/w220_and_h330_face/osYbtvqjMUhEXgkuFJOsRYVpq6N.jpg";
         String year = "2021";
 
-        // Hacemos click en "New film"
         driver.findElement(By.xpath("//*[text()='New film']")).click();
-        // Rellenamos el formulario
+
         driver.findElement(By.name("title")).sendKeys(title);
         driver.findElement(By.name("url")).sendKeys(url);
         driver.findElement(By.name("releaseYear")).sendKeys(year);
         driver.findElement(By.name("synopsis")).sendKeys(synopsis);
-        // Enviamos el formulario
+
         driver.findElement(By.id("Save")).click();
 
-        // THEN: Esperamos que la película creada aparezca en la nueva página resultante
         this.wait.until(ExpectedConditions.textToBe(By.id("film-title"), title));
     }
 
@@ -106,12 +105,15 @@ public class FilmUITest {
         driver.get("http://localhost:" + this.port + "/"); // Accedemos a la pagina web de nuestra aplicación
         driver.findElement(By.id("create-film")).click(); //Localizamos y clicamos new film
 
+        //
         WebElement titulo = driver.findElement(By.name("title")); //Recoge en la variable titulo el contenido del elemento titulo
         titulo.sendKeys("La Vida De Pi");
         driver.findElement(By.name("releaseYear")).sendKeys("2012"); //Localiza y rellena el elemento con nombre releaseYear
         driver.findElement(By.name("url")).sendKeys("https://es.web.img3.acsta.net/medias/nmedia/18/91/30/40/20328542.jpg");//Localiza y rellena el elemento con nombre url
         driver.findElement(By.name("synopsis")).sendKeys("Tras un naufragio, Pi, hijo de un guarda de zoo, se encuentra en un bote salvavidas con un único superviviente, un tigre de bengala.");//Localiza y rellena el elemento con nombre synopsis
         driver.findElement(By.id("Save")).click();//Localizamos y clicamos save
+
+        this.wait.until(ExpectedConditions.textToBe(By.id("film-title"), "La Vida De Pi"));
 
         WebElement tituloGuardado = driver.findElement(By.id("film-title"));
         assertEquals("La Vida De Pi", tituloGuardado.getText());
@@ -131,6 +133,9 @@ public class FilmUITest {
         driver.findElement(By.name("url")).sendKeys("https://m.media-amazon.com/images/S/pv-target-images/79194981293eabf6620ece96eb5a9c1fffa04d3374ae12986e0748800b37b9cf.jpg");//Localiza y rellena el elemento con nombre url
         driver.findElement(By.name("synopsis")).sendKeys("Un grupo de científicos y exploradores, encabezados por Cooper, se embarcan en un viaje espacial para encontrar un lugar con las condiciones necesarias para reemplazar a la Tierra y comenzar una nueva vida allí");//Localiza y rellena el elemento con nombre synopsis
         driver.findElement(By.id("Save")).click();//Localizamos y clicamos save
+
+        this.wait.until(ExpectedConditions.textToBe(By.id("film-title"), "Interestelar"));
+
         driver.findElement(By.id("all-films")).click();
 
         //Borramos la película
