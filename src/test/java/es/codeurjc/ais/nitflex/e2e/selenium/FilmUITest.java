@@ -63,7 +63,9 @@ public class FilmUITest {
                 this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
                 break;
             default:
-                throw new IllegalArgumentException("Unsupported browser: " + browser);
+                ChromeOptions chromeOptionsD = new ChromeOptions();
+                chromeOptionsD.addArguments("--headless");
+                driver = new ChromeDriver(chromeOptionsD);
         }
 
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
