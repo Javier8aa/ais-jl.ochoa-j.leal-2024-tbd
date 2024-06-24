@@ -37,7 +37,6 @@ public class FilmUITest {
     @BeforeEach
     public void setupClass() {
         String browser = System.getenv("BROWSER");
-        System.out.println("El browser que se esta recogiendo es: "+ browser);
 
         if (browser == null) {
             throw new IllegalArgumentException("BROWSER environment variable not set");
@@ -69,7 +68,7 @@ public class FilmUITest {
                 throw new IllegalArgumentException("Unsupported browser: " + browser);
         }
 
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(2));
     }
 
     @AfterEach
