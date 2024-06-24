@@ -14,24 +14,24 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         browser: [chrome, firefox, edge, safari]
         exclude:
+          - os: macos-latest
+            browser: edge
           - os: ubuntu-latest
             browser: edge
           - os: ubuntu-latest
             browser: safari
           - os: windows-latest
             browser: safari
-          - os: macos-latest
-            browser: edge
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        name: Checkout code
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: '17'
 
-      - name: Run E2E Test
-        run: mvn test -Dtest="es.codeurjc.ais.nitflex.e2e.selenium.FilmUITest" -Dbrowser=${{ matrix.browser }} test
+      - name: Run system tests on ${{ matrix.browser }}
+        run: mvn  -Dtest="es.codeurjc.ais.nitflex.e2e.selenium.FilmUITest" -Dbrowser=${{ matrix.browser }} test
