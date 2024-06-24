@@ -144,9 +144,11 @@ public class FilmUITest {
         driver.findElement(By.partialLinkText("Interestelar")).click();
         wait.until(ExpectedConditions.elementToBeClickable(By.id("remove-film")));
         driver.findElement(By.id("remove-film")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("message")));
         assertEquals("Film 'Interestelar' deleted", driver.findElement(By.id("message")).getText());
         wait.until(ExpectedConditions.elementToBeClickable(By.id("all-films")));
         driver.findElement(By.id("all-films")).click();
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.partialLinkText("Interestelar")));
         List<WebElement> peliculaBorrada = driver.findElements(By.partialLinkText("Interestelar"));
         assertTrue(peliculaBorrada.isEmpty());
     }
