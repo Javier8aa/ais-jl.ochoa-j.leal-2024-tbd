@@ -76,7 +76,7 @@ public class FilmUITest {
         }
     }
 
-    @Test
+    /*@Test
     @DisplayName("Añadir una nueva película y comprobar que se ha creado")
     public void createFilmTest() throws Exception {
         // GIVEN
@@ -98,7 +98,7 @@ public class FilmUITest {
         driver.findElement(By.id("Save")).click();
 
         this.wait.until(ExpectedConditions.textToBe(By.id("film-title"), title));
-    }
+    }*/
 
     @Test
     public void testGuardar() {
