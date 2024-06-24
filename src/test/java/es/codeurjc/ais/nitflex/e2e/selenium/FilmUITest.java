@@ -17,7 +17,6 @@ import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.safari.SafariDriver;
-import org.openqa.selenium.safari.SafariOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,7 +36,7 @@ public class FilmUITest {
 
     @BeforeEach
     public void setupClass() {
-        String browser = System.getenv("BROWSER");
+        String browser = System.getProperty("browser");
 
         if (browser == null) {
             throw new IllegalArgumentException("BROWSER environment variable not set");
@@ -60,14 +59,14 @@ public class FilmUITest {
                 driver = new EdgeDriver(edgeOptions);
                 break;
             case "safari":
-                SafariOptions safariOptions = new SafariOptions();
-                driver = new SafariDriver(safariOptions);
+                driver = new SafariDriver();
+                this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported browser: " + browser);
         }
 
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(25));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
     @AfterEach
