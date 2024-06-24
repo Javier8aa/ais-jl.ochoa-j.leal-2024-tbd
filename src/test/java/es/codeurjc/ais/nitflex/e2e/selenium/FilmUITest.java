@@ -124,6 +124,56 @@ public class FilmUITest {
 
     @Test
     public void testBorrar() {
+        driver.get("http://localhost:" + this.port + "/");
+
+        // Wait for the 'create-film' button to be clickable and click it
+        WebElement createFilmButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("create-film")));
+        createFilmButton.click();
+
+        // Wait for the form fields to be visible and interact with them
+        WebElement title = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("title")));
+        title.sendKeys("Interestelar");
+
+        WebElement releaseYear = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("releaseYear")));
+        releaseYear.sendKeys("2014");
+
+        WebElement url = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("url")));
+        url.sendKeys("https://m.media-amazon.com/images/S/pv-target-images/79194981293eabf6620ece96eb5a9c1fffa04d3374ae12986e0748800b37b9cf.jpg");
+
+        WebElement synopsis = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("synopsis")));
+        synopsis.sendKeys("Un grupo de científicos y exploradores, encabezados por Cooper, se embarcan en un viaje espacial para encontrar un lugar con las condiciones necesarias para reemplazar a la Tierra y comenzar una nueva vida allí.");
+
+        WebElement saveButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("Save")));
+        saveButton.click();
+
+        // Wait for the 'all-films' button to be clickable and click it
+        WebElement allFilmsButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("all-films")));
+        allFilmsButton.click();
+
+        // Wait for the created film link to be clickable and click it
+        WebElement filmLink = wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Interestelar")));
+        filmLink.click();
+
+        // Wait for the 'remove-film' button to be clickable and click it
+        WebElement removeButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("remove-film")));
+        removeButton.click();
+
+        // Wait for the confirmation message to be visible and assert its text
+        WebElement message = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("message")));
+        assertEquals("Film 'Interestelar' deleted", message.getText());
+
+        // Wait for the 'all-films' button to be clickable and click it
+        WebElement allFilmsButtonAfterDelete = wait.until(ExpectedConditions.elementToBeClickable(By.id("all-films")));
+        allFilmsButtonAfterDelete.click();
+
+        // Wait for the absence of the deleted film link and assert it is not present
+        boolean filmStillExists = wait.until(ExpectedConditions.invisibilityOfElementLocated(By.partialLinkText("Interestelar")));
+        assertTrue(filmStillExists);
+    }
+}
+
+    /*@Test
+    public void testBorrar() {
         driver.get("http://localhost:" + this.port + "/"); // Accedemos a la pagina web de nuestra aplicación
         //Creamos una pelicula y volvemos a all films
 
@@ -152,4 +202,4 @@ public class FilmUITest {
         List<WebElement> peliculaBorrada = driver.findElements(By.partialLinkText("Interestelar"));
         assertTrue(peliculaBorrada.isEmpty());
     }
-}
+}*/
