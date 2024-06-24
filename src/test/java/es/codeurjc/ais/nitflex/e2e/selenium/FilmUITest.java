@@ -59,10 +59,7 @@ public class FilmUITest {
                 driver = new EdgeDriver(edgeOptions);
                 break;
             case "safari":
-                if (!System.getProperty("os.name").toLowerCase().contains("mac")) {
-                    throw new IllegalArgumentException("Safari is only supported on macOS");
-                }
-                driver = new SafariDriver();  // Safari doesn't support headless mode yet
+                driver = new SafariDriver();
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported browser: " + browser);
