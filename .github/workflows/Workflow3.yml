@@ -4,6 +4,9 @@ on:
   create:
     branches:
       - release/**
+    paths:
+      - src/
+      - pom.xml
   workflow_dispatch:
 
 permissions:
@@ -11,8 +14,10 @@ permissions:
   contents: read
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
+    outputs:
+        tag: ${{ steps.project.outputs.tag }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 17
@@ -35,21 +40,23 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: publish
+    needs: build
     steps:
-      - name: 'Login to Azure'
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+      - name: 'Login Azure'
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: 'Deoploy to Azure Container'
+      - name: 'Deoploy Azure Container'
         run: |
           az container create \
             --resource-group ${{ secrets.AZURE_GROUP }} \
             --name nitflex \
-            --image ${{ secrets.DOCKERHUB_USERNAME }}/nitflex:${{ steps.project.outputs.tag }} \
+            --image ${{ secrets.DOCKERHUB_USERNAME }}/nitflex:${{ needs.build.outputs.image-tag }} \
             --dns-name-label nitflex-jljlo \
             --ports 8080
   test:
