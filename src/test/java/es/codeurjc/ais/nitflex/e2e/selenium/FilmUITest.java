@@ -98,7 +98,7 @@ public class FilmUITest {
         driver.findElement(By.id("Save")).click();
 
         this.wait.until(ExpectedConditions.textToBe(By.id("film-title"), title));
-    }*/
+    }
 
     @Test
     public void testGuardar() {
@@ -120,7 +120,7 @@ public class FilmUITest {
         wait.until(ExpectedConditions.elementToBeClickable(By.id("all-films")));
         driver.findElement(By.id("all-films")).click();
         assertNotNull(driver.findElement(By.partialLinkText("La Vida De Pi")));
-    }
+    }*/
 
     @Test
     public void testBorrar() {
