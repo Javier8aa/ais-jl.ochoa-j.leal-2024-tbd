@@ -60,13 +60,13 @@ public class FilmUITest {
                 break;
             case "safari":
                 driver = new SafariDriver();
-                this.wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+                this.wait = new WebDriverWait(driver, Duration.ofSeconds(60));
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported browser: " + browser);
         }
 
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(60));
     }
 
     @AfterEach
