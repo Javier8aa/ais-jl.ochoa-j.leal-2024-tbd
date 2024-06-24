@@ -37,7 +37,7 @@ public class SmokeTest {
         if (host == null) {
             System.err.println("You must provide the host as a system property");
         }
-        driver.get("http://" + host + "/");
+        driver.get(host);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(text(), 'Welcome to Nitflex')]")));
     }
 }
