@@ -17,6 +17,7 @@ import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.safari.SafariOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -59,7 +60,8 @@ public class FilmUITest {
                 driver = new EdgeDriver(edgeOptions);
                 break;
             case "safari":
-                driver = new SafariDriver();
+                SafariOptions safariOptions = new SafariOptions();
+                driver = new SafariDriver(safariOptions);
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported browser: " + browser);
