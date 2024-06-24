@@ -128,8 +128,8 @@ public class FilmUITest {
         //Creamos una pelicula y volvemos a all films
 
         wait.until(ExpectedConditions.elementToBeClickable(By.id("create-film")));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("title")));
         driver.findElement(By.id("create-film")).click(); //Localizamos y clicamos new film
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("title")));
         driver.findElement(By.name("title")).sendKeys("Interestelar"); //Recoge en la variable titulo el contenido del elemento titulo
         driver.findElement(By.name("releaseYear")).sendKeys("2014"); //Localiza y rellena el elemento con nombre releaseYear
         driver.findElement(By.name("url")).sendKeys("https://m.media-amazon.com/images/S/pv-target-images/79194981293eabf6620ece96eb5a9c1fffa04d3374ae12986e0748800b37b9cf.jpg");//Localiza y rellena el elemento con nombre url
