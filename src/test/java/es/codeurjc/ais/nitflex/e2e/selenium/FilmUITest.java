@@ -76,7 +76,7 @@ public class FilmUITest {
         }
     }
 
-    /*@Test
+    @Test
     @DisplayName("Añadir una nueva película y comprobar que se ha creado")
     public void createFilmTest() throws Exception {
         // GIVEN
@@ -99,7 +99,6 @@ public class FilmUITest {
 
         this.wait.until(ExpectedConditions.textToBe(By.id("film-title"), title));
     }
-*/
 
     @Test
     public void testGuardar() {
@@ -191,7 +190,30 @@ public class FilmUITest {
 
 }
 
-    /*@Test
+    /*
+    @Test
+    public void testGuardar() {
+        driver.get("http://localhost:" + this.port + "/"); // Accedemos a la pagina web de nuestra aplicación
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("create-film")));
+        driver.findElement(By.id("create-film")).click();//Localizamos y clicamos new film
+
+        WebElement titulo = driver.findElement(By.name("title")); //Recoge en la variable titulo el contenido del elemento titulo
+        titulo.sendKeys("La Vida De Pi");
+        driver.findElement(By.name("releaseYear")).sendKeys("2012"); //Localiza y rellena el elemento con nombre releaseYear
+        driver.findElement(By.name("url")).sendKeys("https://es.web.img3.acsta.net/medias/nmedia/18/91/30/40/20328542.jpg");//Localiza y rellena el elemento con nombre url
+        driver.findElement(By.name("synopsis")).sendKeys("Tras un naufragio, Pi, hijo de un guarda de zoo, se encuentra en un bote salvavidas con un único superviviente, un tigre de bengala.");//Localiza y rellena el elemento con nombre synopsis
+        driver.findElement(By.id("Save")).click();//Localizamos y clicamos save
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("film-title")));
+        WebElement tituloGuardado = driver.findElement(By.id("film-title"));
+        assertEquals("La Vida De Pi", tituloGuardado.getText());
+
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("all-films")));
+        driver.findElement(By.id("all-films")).click();
+        assertNotNull(driver.findElement(By.partialLinkText("La Vida De Pi")));
+    }
+
+    @Test
     public void testBorrar() {
         driver.get("http://localhost:" + this.port + "/"); // Accedemos a la pagina web de nuestra aplicación
         //Creamos una pelicula y volvemos a all films
@@ -220,27 +242,5 @@ public class FilmUITest {
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.partialLinkText("Interestelar")));
         List<WebElement> peliculaBorrada = driver.findElements(By.partialLinkText("Interestelar"));
         assertTrue(peliculaBorrada.isEmpty());
-    }
-
-    @Test
-    public void testGuardar() {
-        driver.get("http://localhost:" + this.port + "/"); // Accedemos a la pagina web de nuestra aplicación
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("create-film")));
-        driver.findElement(By.id("create-film")).click();//Localizamos y clicamos new film
-
-        WebElement titulo = driver.findElement(By.name("title")); //Recoge en la variable titulo el contenido del elemento titulo
-        titulo.sendKeys("La Vida De Pi");
-        driver.findElement(By.name("releaseYear")).sendKeys("2012"); //Localiza y rellena el elemento con nombre releaseYear
-        driver.findElement(By.name("url")).sendKeys("https://es.web.img3.acsta.net/medias/nmedia/18/91/30/40/20328542.jpg");//Localiza y rellena el elemento con nombre url
-        driver.findElement(By.name("synopsis")).sendKeys("Tras un naufragio, Pi, hijo de un guarda de zoo, se encuentra en un bote salvavidas con un único superviviente, un tigre de bengala.");//Localiza y rellena el elemento con nombre synopsis
-        driver.findElement(By.id("Save")).click();//Localizamos y clicamos save
-
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("film-title")));
-        WebElement tituloGuardado = driver.findElement(By.id("film-title"));
-        assertEquals("La Vida De Pi", tituloGuardado.getText());
-
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("all-films")));
-        driver.findElement(By.id("all-films")).click();
-        assertNotNull(driver.findElement(By.partialLinkText("La Vida De Pi")));
     }
 }*/
