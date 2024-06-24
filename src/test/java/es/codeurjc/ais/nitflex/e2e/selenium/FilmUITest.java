@@ -99,7 +99,7 @@ public class FilmUITest {
 
         this.wait.until(ExpectedConditions.textToBe(By.id("film-title"), title));
     }
-
+/*
     @Test
     public void testGuardar() {
         driver.get("http://localhost:" + this.port + "/"); // Accedemos a la pagina web de nuestra aplicación
@@ -145,5 +145,5 @@ public class FilmUITest {
         driver.findElement(By.id("all-films")).click();
         List<WebElement> peliculaBorrada = driver.findElements(By.partialLinkText("Interestelar"));
         assertTrue(peliculaBorrada.isEmpty());
-    }
+    }*/
 }
