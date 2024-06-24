@@ -160,7 +160,8 @@ public class FilmUITest {
 
         // Wait for the confirmation message to be visible and assert its text
         WebElement message = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("message")));
-        assertEquals("Film 'Interestelar' deleted", message.getText());
+        String actualMessage = message.getText().trim().replaceAll("\\s+", " ");
+        assertEquals("Film 'Interestelar' deleted", actualMessage);
 
         // Wait for the 'all-films' button to be clickable and click it
         WebElement allFilmsButtonAfterDelete = wait.until(ExpectedConditions.elementToBeClickable(By.id("all-films")));
@@ -170,6 +171,7 @@ public class FilmUITest {
         boolean filmStillExists = wait.until(ExpectedConditions.invisibilityOfElementLocated(By.partialLinkText("Interestelar")));
         assertTrue(filmStillExists);
     }
+
 }
 
     /*@Test
