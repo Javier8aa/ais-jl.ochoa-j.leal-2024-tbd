@@ -56,7 +56,7 @@ jobs:
           az container create \
             --resource-group ${{ secrets.AZURE_GROUP }} \
             --name nitflex \
-            --image ${{ secrets.DOCKERHUB_USERNAME }}/nitflex:${{ needs.build.outputs.image-tag }} \
+            --image ${{ secrets.DOCKERHUB_USERNAME }}/nitflex:${{ needs.build.outputs.tag }} \
             --dns-name-label nitflex-jljlo \
             --ports 8080
   test:
