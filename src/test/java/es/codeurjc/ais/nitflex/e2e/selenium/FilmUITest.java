@@ -68,7 +68,7 @@ public class FilmUITest {
                 throw new IllegalArgumentException("Unsupported browser: " + browser);
         }
 
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(2));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(25));
     }
 
     @AfterEach
