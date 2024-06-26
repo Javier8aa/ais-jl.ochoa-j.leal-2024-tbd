@@ -1,10 +1,10 @@
 # AIS-Practicas-4y5-2024
 
-Autor(es): Michel Maes Bermejo
+Autor(es): Jorge Leal & Javier Laureano Ochoa
 
-[Repositorio](https://github.com/URJC-AIS/AIS-Practicas-4y5-2024-template)
+[Repositorio](https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd)
 
-[Aplicación Azure](http://ais-nitflex.westeurope.azurecontainer.io:8080)
+[Aplicación Azure](http://nitflex-jljlo.westeurope.azurecontainer.io:8080/)
 
 ## Desarrollo con GitHubFlow (Práctica 5)
 
