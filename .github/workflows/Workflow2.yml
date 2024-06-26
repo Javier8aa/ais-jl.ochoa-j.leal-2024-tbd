@@ -28,4 +28,4 @@ jobs:
         run: mvn -Dtest=es.codeurjc.ais.nitflex.unitary.FilmServiceUnitaryTest test
 
       - name: E2E test
-        run: mvn -Dtest=es.codeurjc.ais.nitflex.e2e.selenium.FilmUITest test
+        run: mvn -Dtest=es.codeurjc.ais.nitflex.e2e.selenium.FilmUITest -Dbrowser=chrome test
