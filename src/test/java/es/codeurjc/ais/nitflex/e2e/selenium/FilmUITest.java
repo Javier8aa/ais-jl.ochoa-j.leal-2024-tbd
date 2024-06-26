@@ -1,7 +1,6 @@
 package es.codeurjc.ais.nitflex.e2e.selenium;
 
 import java.time.Duration;
-import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -88,6 +87,40 @@ public class FilmUITest {
         String url = "https://www.themoviedb.org/t/p/w220_and_h330_face/osYbtvqjMUhEXgkuFJOsRYVpq6N.jpg";
         String year = "2021";
 
+        WebElement newFilmButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[text()='New film']")));
+        newFilmButton.click();
+
+        WebElement titleInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("title")));
+        titleInput.sendKeys(title);
+
+        WebElement urlInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("url")));
+        urlInput.sendKeys(url);
+
+        WebElement releaseYearInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("releaseYear")));
+        releaseYearInput.sendKeys(year);
+
+        WebElement synopsisInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("synopsis")));
+        synopsisInput.sendKeys(synopsis);
+
+        WebElement saveButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("Save")));
+        saveButton.click();
+
+        WebElement filmTitle = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("film-title")));
+        assertEquals(title, filmTitle.getText().trim().replaceAll("\\s+", " "));
+    }
+
+    /*@Test
+    @DisplayName("Añadir una nueva película y comprobar que se ha creado")
+    public void createFilmTest() throws Exception {
+        // GIVEN
+        this.driver.get("http://localhost:" + this.port + "/");
+
+        // WHEN
+        String title = "Spider-Man: No Way Home";
+        String synopsis = "Peter Parker es desenmascarado y por tanto no es capaz de separar su vida normal de los enormes riesgos que conlleva ser un súper héroe.";
+        String url = "https://www.themoviedb.org/t/p/w220_and_h330_face/osYbtvqjMUhEXgkuFJOsRYVpq6N.jpg";
+        String year = "2021";
+
         driver.findElement(By.xpath("//*[text()='New film']")).click();
 
         driver.findElement(By.name("title")).sendKeys(title);
@@ -98,7 +131,7 @@ public class FilmUITest {
         driver.findElement(By.id("Save")).click();
 
         this.wait.until(ExpectedConditions.textToBe(By.id("film-title"), title));
-    }
+    }*/
 
     @Test
     public void testGuardar() {
