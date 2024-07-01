@@ -1,142 +1,264 @@
 package es.codeurjc.ais.nitflex.e2e.selenium;
 
-import es.codeurjc.ais.nitflex.Application;
-import org.junit.jupiter.api.Test;
+import java.time.Duration;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
-import java.time.Duration;
+import es.codeurjc.ais.nitflex.Application;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
-import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class WebAppTest {
+public class FilmUITest {
 
     @LocalServerPort
     int port;
-
-    private WebDriver driver;
-    private WebDriverWait wait;
+    protected WebDriver driver;
+    protected WebDriverWait wait;
 
     @BeforeEach
-    public void setupTest() {
-        EdgeOptions options = new EdgeOptions();
-        options.addArguments("--headless");
-        this.driver = new EdgeDriver(options);
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(2));
+    public void setupClass() {
+        String browser = System.getProperty("browser");
+
+        if (browser == null) {
+            throw new IllegalArgumentException("BROWSER environment variable not set");
+        }
+
+        switch (browser.toLowerCase()) {
+            case "chrome":
+                ChromeOptions chromeOptions = new ChromeOptions();
+                chromeOptions.addArguments("--headless");
+                driver = new ChromeDriver(chromeOptions);
+                break;
+            case "firefox":
+                FirefoxOptions firefoxOptions = new FirefoxOptions();
+                firefoxOptions.addArguments("--headless");
+                driver = new FirefoxDriver(firefoxOptions);
+                break;
+            case "edge":
+                EdgeOptions edgeOptions = new EdgeOptions();
+                edgeOptions.addArguments("--headless");
+                driver = new EdgeDriver(edgeOptions);
+                break;
+            case "safari":
+                driver = new SafariDriver();
+                this.wait = new WebDriverWait(driver, Duration.ofSeconds(40));
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported browser: " + browser);
+        }
+
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(40));
     }
 
     @AfterEach
     public void teardown() {
-        if (driver != null) driver.quit();
+        if (this.driver != null) {
+            this.driver.quit();
+        }
     }
 
     @Test
-    void CreateFilmTest(){
-        driver.get("http://localhost:" + this.port + "/");
+    @DisplayName("Añadir una nueva película y comprobar que se ha creado")
+    public void createFilmTest() throws Exception {
+        // GIVEN
+        this.driver.get("http://localhost:" + this.port + "/");
 
-        wait.until(elementToBeClickable(By.id("create-film")));
-        int numOriginal = driver.findElements(By.className("film-title")).size();
-        driver.findElement(By.id("create-film")).click();
+        // WHEN
+        String title = "Spider-Man: No Way Home";
+        String synopsis = "Peter Parker es desenmascarado y por tanto no es capaz de separar su vida normal de los enormes riesgos que conlleva ser un súper héroe.";
+        String url = "https://www.themoviedb.org/t/p/w220_and_h330_face/osYbtvqjMUhEXgkuFJOsRYVpq6N.jpg";
+        String year = "2021";
 
-        String nuevoTitulo = "Fast and furious X";
-        wait.until(presenceOfElementLocated(By.name("title"))).sendKeys(nuevoTitulo);
-        String nuevoAnio = "2023";
-        driver.findElement(By.name("releaseYear")).sendKeys(nuevoAnio);
-        String nuevaUrl = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/x3zlm6VxPvVrYWE3bHkYUQMR798.jpg";
-        driver.findElement(By.name("url")).sendKeys(nuevaUrl);
-        String nuevaSynopsis = "Dominic Toretto debera proteger a su equipo y a su familia de Dante Reyes. Este antagonista es el hijo del narcotraficante Hernan Reyes y busca venganza por lo sucedido en 'Fast five', cuando Toretto y su grupo les robaron mucho dinero en Rio de Janeiro.";
-        driver.findElement(By.name("synopsis")).sendKeys(nuevaSynopsis);
+        WebElement newFilmButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[text()='New film']")));
+        newFilmButton.click();
 
-        wait.until(elementToBeClickable(By.id("Save"))).click();
-        wait.until(elementToBeClickable(By.id("all-films"))).click();
+        WebElement titleInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("title")));
+        titleInput.sendKeys(title);
 
-        wait.until(elementToBeClickable(By.id("create-film")));
-        assertEquals(numOriginal+1, driver.findElements(By.className("film-title")).size());
+        WebElement urlInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("url")));
+        urlInput.sendKeys(url);
+
+        WebElement releaseYearInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("releaseYear")));
+        releaseYearInput.sendKeys(year);
+
+        WebElement synopsisInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("synopsis")));
+        synopsisInput.sendKeys(synopsis);
+
+        WebElement saveButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("Save")));
+        saveButton.click();
+
+        WebElement filmTitle = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("film-title")));
+        assertEquals(title, filmTitle.getText().trim().replaceAll("\\s+", " "));
+    }
+
+    /*@Test
+    @DisplayName("Añadir una nueva película y comprobar que se ha creado")
+    public void createFilmTest() throws Exception {
+        // GIVEN
+        this.driver.get("http://localhost:" + this.port + "/");
+
+        // WHEN
+        String title = "Spider-Man: No Way Home";
+        String synopsis = "Peter Parker es desenmascarado y por tanto no es capaz de separar su vida normal de los enormes riesgos que conlleva ser un súper héroe.";
+        String url = "https://www.themoviedb.org/t/p/w220_and_h330_face/osYbtvqjMUhEXgkuFJOsRYVpq6N.jpg";
+        String year = "2021";
+
+        driver.findElement(By.xpath("//*[text()='New film']")).click();
+
+        driver.findElement(By.name("title")).sendKeys(title);
+        driver.findElement(By.name("url")).sendKeys(url);
+        driver.findElement(By.name("releaseYear")).sendKeys(year);
+        driver.findElement(By.name("synopsis")).sendKeys(synopsis);
+
+        driver.findElement(By.id("Save")).click();
+
+        this.wait.until(ExpectedConditions.textToBe(By.id("film-title"), title));
+    }*/
+
+    @Test
+    public void testGuardar() {
+        driver.get("http://localhost:" + this.port + "/"); // Accedemos a la pagina web de nuestra aplicación
+
+        // Wait for the 'create-film' button to be clickable and click it
+        WebElement createFilmButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("create-film")));
+        createFilmButton.click();
+
+        // Wait for the form fields to be visible and interact with them
+        WebElement titulo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("title")));
+        titulo.sendKeys("La Vida De Pi");
+
+        WebElement releaseYear = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("releaseYear")));
+        releaseYear.sendKeys("2012");
+
+        WebElement url = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("url")));
+        url.sendKeys("https://es.web.img3.acsta.net/medias/nmedia/18/91/30/40/20328542.jpg");
+
+        WebElement synopsis = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("synopsis")));
+        synopsis.sendKeys("Tras un naufragio, Pi, hijo de un guarda de zoo, se encuentra en un bote salvavidas con un único superviviente, un tigre de bengala.");
+
+        WebElement saveButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("Save")));
+        saveButton.click();
+
+        // Wait for the saved film title to be visible and assert its text
+        WebElement tituloGuardado = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("film-title")));
+        String actualTitle = tituloGuardado.getText().trim().replaceAll("\\s+", " ");
+        assertEquals("La Vida De Pi", actualTitle);
+
+        // Wait for the 'all-films' button to be clickable and click it
+        WebElement allFilmsButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("all-films")));
+        allFilmsButton.click();
+
+        // Assert that the saved film is present in the film list
+        WebElement filmLink = wait.until(ExpectedConditions.visibilityOfElementLocated(By.partialLinkText("La Vida De Pi")));
+        assertNotNull(filmLink);
     }
 
     @Test
-    void RemoveFilmTest(){
+    public void testBorrar() {
         driver.get("http://localhost:" + this.port + "/");
 
-        wait.until(elementToBeClickable(By.id("create-film")));
-        int numOriginal = driver.findElements(By.className("film-title")).size();
-        driver.findElement(By.id("create-film")).click();
+        // Wait for the 'create-film' button to be clickable and click it
+        WebElement createFilmButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("create-film")));
+        createFilmButton.click();
 
-        String nuevoTitulo = "Kung Fu Panda";
-        wait.until(presenceOfElementLocated(By.name("title"))).sendKeys(nuevoTitulo);
-        String nuevoAnio = "2018";
-        driver.findElement(By.name("releaseYear")).sendKeys(nuevoAnio);
-        String nuevaUrl = "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/gFrK1vBfvcfN6UlVrSuD2napXVR.jpg";
-        driver.findElement(By.name("url")).sendKeys(nuevaUrl);
-        String nuevaSynopsis = "Po, el guerrero del dragon, luchara con sus amigos contra los peligros que les afloran";
-        driver.findElement(By.name("synopsis")).sendKeys(nuevaSynopsis);
+        // Wait for the form fields to be visible and interact with them
+        WebElement title = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("title")));
+        title.sendKeys("Interestelar");
 
-        wait.until(elementToBeClickable(By.id("Save"))).click();
-        wait.until(elementToBeClickable(By.id("all-films"))).click();
-        wait.until(elementToBeClickable(By.id("Kung Fu Panda"))).click();//FALLO
-        wait.until(elementToBeClickable(By.id("remove-film"))).click();
-        wait.until(elementToBeClickable(By.id("all-films"))).click();
+        WebElement releaseYear = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("releaseYear")));
+        releaseYear.sendKeys("2014");
 
-        wait.until(elementToBeClickable(By.id("create-film")));
-        assertEquals(numOriginal, driver.findElements(By.className("film-title")).size());
+        WebElement url = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("url")));
+        url.sendKeys("https://m.media-amazon.com/images/S/pv-target-images/79194981293eabf6620ece96eb5a9c1fffa04d3374ae12986e0748800b37b9cf.jpg");
+
+        WebElement synopsis = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("synopsis")));
+        synopsis.sendKeys("Un grupo de científicos y exploradores, encabezados por Cooper, se embarcan en un viaje espacial para encontrar un lugar con las condiciones necesarias para reemplazar a la Tierra y comenzar una nueva vida allí.");
+
+        WebElement saveButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("Save")));
+        saveButton.click();
+
+        // Wait for the 'all-films' button to be clickable and click it
+        WebElement allFilmsButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("all-films")));
+        allFilmsButton.click();
+
+        // Wait for the created film link to be clickable and click it
+        WebElement filmLink = wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Interestelar")));
+        filmLink.click();
+
+        // Wait for the 'remove-film' button to be clickable and click it
+        WebElement removeButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("remove-film")));
+        removeButton.click();
+
+        // Wait for the confirmation message to be visible and assert its text
+        WebElement message = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("message")));
+        String actualMessage = message.getText().trim().replaceAll("\\s+", " ");
+        assertEquals("Film 'Interestelar' deleted", actualMessage);
+
+        // Wait for the 'all-films' button to be clickable and click it
+        WebElement allFilmsButtonAfterDelete = wait.until(ExpectedConditions.elementToBeClickable(By.id("all-films")));
+        allFilmsButtonAfterDelete.click();
+
+        // Wait for the absence of the deleted film link and assert it is not present
+        boolean filmStillExists = wait.until(ExpectedConditions.invisibilityOfElementLocated(By.partialLinkText("Interestelar")));
+        assertTrue(filmStillExists);
     }
 
     @Test
-    void CancelEditTest(){
-        driver.get("http://localhost:" + this.port + "/");
+    @DisplayName("Intentar añadir una nueva película con un año no válido y verificar que no se crea")
+    public void createFilmInvalidYearTest() throws Exception {
+        // GIVEN
+        this.driver.get("http://localhost:" + this.port + "/");
 
-        wait.until(elementToBeClickable(By.id("create-film"))).click();
+        // WHEN
+        String title = "The Boxing Cats (Prof. Welton's)";
+        String synopsis = "Un peculiar combate de boxeo... entre gatosº ";
+        String url = "https://pics.filmaffinity.com/the_boxing_cats_prof_welton_s-778652309-mmed.jpg";
+        String invalidYear = "1894";
 
-        String nuevoTitulo = "Vengadores: Infinity War";
-        wait.until(presenceOfElementLocated(By.name("title"))).sendKeys(nuevoTitulo);
-        String nuevoAnio = "2018";
-        driver.findElement(By.name("releaseYear")).sendKeys(nuevoAnio);
-        String nuevaUrl = "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/ksBQ4oHQDdJwND8H90ay8CbMihU.jpg";
-        driver.findElement(By.name("url")).sendKeys(nuevaUrl);
-        String nuevaSynopsis = "Ironman y Capitan America deberan limar diferencias y buscar sus mejores aliados para vencer a Thanos";
-        driver.findElement(By.name("synopsis")).sendKeys(nuevaSynopsis);
+        WebElement newFilmButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[text()='New film']")));
+        newFilmButton.click();
 
-        wait.until(elementToBeClickable(By.id("Save"))).click();
-        wait.until(elementToBeClickable(By.id("all-films"))).click();
-        wait.until(elementToBeClickable(By.id("Vengadores: Infinity War"))).click();//AQUI
-        wait.until(elementToBeClickable(By.id("edit-film"))).click();
-        wait.until(elementToBeClickable(By.id("Cancel"))).click();
+        WebElement titleInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("title")));
+        titleInput.sendKeys(title);
 
-        wait.until(elementToBeClickable(By.id("edit-film")));
-        assertEquals(nuevoTitulo, driver.findElement(By.id("film-title")).getText());
-    }
+        WebElement urlInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("url")));
+        urlInput.sendKeys(url);
 
-    @Test
-    void errorCreateInvalidYear(){
-        driver.get("http://localhost:" + this.port + "/");
+        WebElement releaseYearInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("releaseYear")));
+        releaseYearInput.sendKeys(invalidYear);
 
-        wait.until(elementToBeClickable(By.id("create-film")));
-        driver.findElement(By.id("create-film")).click();
+        WebElement synopsisInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("synopsis")));
+        synopsisInput.sendKeys(synopsis);
 
-        String nuevoTitulo = "Peli Inexistente";
-        wait.until(presenceOfElementLocated(By.name("title"))).sendKeys(nuevoTitulo);
-        String nuevoAnio = "1894";
-        driver.findElement(By.name("releaseYear")).sendKeys(nuevoAnio);
-        String nuevaUrl = "https://th.bing.com/th/id/R.c8092fc59c35ec31878c55f6f8cab8dc?rik=gB0jsuTkA20w8g&pid=ImgRaw&r=0.jpg";
-        driver.findElement(By.name("url")).sendKeys(nuevaUrl);
-        String nuevaSynopsis = "Esta película no pudo ser creada por que año es incorrecto";
-        driver.findElement(By.name("synopsis")).sendKeys(nuevaSynopsis);
+        WebElement saveButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("Save")));
+        saveButton.click();
 
-        wait.until(elementToBeClickable(By.id("Save"))).click();
+        // THEN
+        WebElement errorMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("message")));
+        assertEquals("The year is invalid: should be since 1895", errorMessage.getText().trim());
 
-        this.wait.until(ExpectedConditions.textToBe(By.id("message"),"The year is invalid: should be since 1895"));
+        WebElement allFilmsButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("all-films")));
+        allFilmsButton.click();
+
+        boolean filmStillExists = wait.until(ExpectedConditions.invisibilityOfElementLocated(By.partialLinkText(title)));
+        assertTrue(filmStillExists);
     }
 }

@@ -66,6 +66,7 @@ public class FilmServiceUnitaryTest {
         Film pelicula = new Film();
         pelicula.setUrl("https://www.urjc.es/images/Covers/cover_intranet_urjc.jpg");   // Creamos una película con URL correcta
         pelicula.setTitle("Prueba");
+        pelicula.setReleaseYear(2020);
 
         //                              WHEN
         doNothing().when(urlMock).checkValidImageURL(pelicula.getUrl());
@@ -88,6 +89,7 @@ public class FilmServiceUnitaryTest {
         Film pelicula = new Film();
         pelicula.setUrl("esto-no-es-una-url");         // Creamos una película con URL incorrecta
         pelicula.setTitle("Prueba");
+        pelicula.setReleaseYear(2020);
 
         //WHEN
         doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "400 BAD_REQUEST \"The url format is not valid\""))
@@ -110,7 +112,7 @@ public class FilmServiceUnitaryTest {
         pelicula.setUrl("https://www.urjc.es/images/Covers/cover_intranet_urjc.jpg");
 
         //WHEN
-        doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "The year is invalid: should be since 1895"))
+        doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "400 BAD_REQUEST \"The year is invalid: should be since 1895\""))
                 .when(repositorioMock).save(pelicula);
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> {
@@ -118,9 +120,8 @@ public class FilmServiceUnitaryTest {
         });
 
         //THEN
-        assertEquals("The year is invalid: should be since 1895", ex.getMessage());
+        assertEquals("400 BAD_REQUEST \"The year is invalid: should be since 1895\"", ex.getMessage());
         verify(repositorioMock, never()).save(pelicula);
         verify(notificacionMock, never()).notify(anyString());
     }
-
 }
