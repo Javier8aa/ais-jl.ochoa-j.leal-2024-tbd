@@ -42,6 +42,9 @@ public class FilmService {
 		if (film.getTitle() == "") {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The title is empty");
 		}
+		if (film.getReleaseYear() < 1895) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The year is invalid: should be since 1895");//hola
+		}
 		urlUtils.checkValidImageURL(film.getUrl());
 		Film newFilm = repository.save(film);
 		notificationService.notify("Film Event: Film with title="+newFilm.getTitle()+" was created");
@@ -52,4 +55,5 @@ public class FilmService {
 		repository.deleteById(id);
 		notificationService.notify("Film Event: Film with id="+id+" was deleted");
 	}
+
 }
