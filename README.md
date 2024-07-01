@@ -31,4 +31,19 @@ $ git checkout -b fix/cancel-button-bug
 $ git add .
 ```
 
-Ejemplo de un enlace en Markdown: [Workflow 1](https://github.com/URJC-AIS/continuous-deployment-azure/actions/runs/8746724116)
+4. Realizamos el commit del fix (Javier)
+```
+$ git commit -m "Fix cancel button bug and add regression test"
+```
+
+5. Realizamos el push del fix (Javier)
+```
+$ git push origin fix-cancel-edition-1
+```
+Ejecucion Workflow1: [Workflow 1](https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd/actions/runs/9750980755)
+
+6. Abrimos el pull request (Javier)
+```
+$ 
+```
+Ejecucion Workflow3: [Workflow 3]()
