@@ -19,7 +19,31 @@ Clonamos el repositorio
 1. Clonamos los repositorios
 ```
 $ git clone https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd.git
-....
+```
 
+2. Creamos rama del fix (Javier)
+```
+$ git checkout -b fix/cancel-button-bug
+```
 
-Ejemplo de un enlace en Markdown: [Workflow 1](https://github.com/URJC-AIS/continuous-deployment-azure/actions/runs/8746724116)
+3. Añadimos arreglos bug y test del fix (Javier)
+```
+$ git add .
+```
+
+4. Realizamos el commit del fix (Javier)
+```
+$ git commit -m "Fix cancel button bug and add regression test"
+```
+
+5. Realizamos el push del fix (Javier)
+```
+$ git push origin fix-cancel-edition-1
+```
+Ejecucion Workflow1: [Workflow 1](https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd/actions/runs/9750980755)
+
+6. Abrimos el pull request (Javier)
+```
+$ 
+```
+Ejecucion Workflow3: [Workflow 3]()
