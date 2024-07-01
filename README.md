@@ -10,8 +10,6 @@ Autor(es): Jorge Leal & Javier Laureano Ochoa
 
 Una vez creados los workflows y funcionando estos, pasamos a crear la nueva funcionalidad utilizando GithubFlow:
 
-Clonamos el repositorio
-
 1. Clonamos el reporsitorio
 ```
 $ git clone https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd.git
@@ -37,4 +35,5 @@ $ git commit -m "Fix cancel button bug and add regression test"
 git push origin fix-cancel-edition-1
 ```
 
-Ejemplo de un enlace en Markdown: [Workflow 1](https://github.com/URJC-AIS/continuous-deployment-azure/actions/runs/8746724116)
+Ejecucion Workflow1: [Workflow 1](https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd/actions/runs/9749709406)
+
