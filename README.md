@@ -16,8 +16,9 @@ Una vez creados los workflows y funcionando estos, pasamos a crear la nueva func
 
 Clonamos el repositorio
 
+1. Clonamos los repositorios
 ```
-$ git clone ...
+$ git clone https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd.git
 ....
 
 
