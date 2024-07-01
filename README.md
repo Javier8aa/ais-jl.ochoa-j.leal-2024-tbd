@@ -12,8 +12,29 @@ Una vez creados los workflows y funcionando estos, pasamos a crear la nueva func
 
 Clonamos el repositorio
 
+1. Clonamos el reporsitorio
 ```
-$ git clone ...
-....
+$ git clone https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd.git
+```
+
+2. Creamos rama del fix (Javier)
+```
+$ git checkout -b fix/cancel-button-bug
+```
+
+3. Añadimos arreglos bug y test del fix (Javier)
+```
+$ git add .
+```
+
+4. Realizamos el commit del fix (Javier)
+```
+$ git commit -m "Fix cancel button bug and add regression test"
+```
+
+5. Realizamos el push del fix (Javier)
+```
+git push origin fix-cancel-edition-1
+```
 
 Ejemplo de un enlace en Markdown: [Workflow 1](https://github.com/URJC-AIS/continuous-deployment-azure/actions/runs/8746724116)
