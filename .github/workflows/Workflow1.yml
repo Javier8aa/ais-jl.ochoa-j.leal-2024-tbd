@@ -4,11 +4,10 @@ on:
   push:
     branches-ignore:
       - trunk
-      - release
     paths:
       - 'src/**'
       - 'pom.xml'
-  workflow_dispatch:
+      - '.github/**'
 
 jobs:
   test:
