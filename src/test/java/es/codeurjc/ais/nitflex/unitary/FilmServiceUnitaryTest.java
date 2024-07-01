@@ -103,22 +103,22 @@ public class FilmServiceUnitaryTest {
     @Test
     @DisplayName("No se debe permitir crear una película con un año anterior a 1895")
     public void testGuardarPeliculaConAnoNoValido() {
-        //                              GIVEN
+        //GIVEN
         Film pelicula = new Film();
         pelicula.setTitle("Pelicula Invalida");
         pelicula.setReleaseYear(1800); // Año no válido
         pelicula.setUrl("https://www.urjc.es/images/Covers/cover_intranet_urjc.jpg");
 
-        //                              WHEN
-        doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "El año de lanzamiento no puede ser anterior a 1895."))
+        //WHEN
+        doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "The year is invalid: should be since 1895"))
                 .when(repositorioMock).save(pelicula);
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> {
             filmService.save(pelicula);
         });
 
-        //                              THEN
-        assertEquals("El año de lanzamiento no puede ser anterior a 1895.", ex.getMessage());
+        //THEN
+        assertEquals("The year is invalid: should be since 1895", ex.getMessage());
         verify(repositorioMock, never()).save(pelicula);
         verify(notificacionMock, never()).notify(anyString());
     }
