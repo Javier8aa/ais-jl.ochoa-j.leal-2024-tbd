@@ -1,12 +1,11 @@
 name: Workflow3_Docker_Azure
 
 on:
-  create:
+  pull_request:
+    types: [closed]
     branches:
-      - release/**
-    paths:
-      - src/
-      - pom.xml
+      - main
+      - trunk
 
 permissions:
   id-token: write
