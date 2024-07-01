@@ -23,3 +23,16 @@ $ git clone https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd.git
 
 
 Ejemplo de un enlace en Markdown: [Workflow 1](https://github.com/URJC-AIS/continuous-deployment-azure/actions/runs/8746724116)
+
+2. Creamos rama para la feature (Jorge)
+```
+git checkout -b  feature1/año-no-valido
+```
+3. Añadimos los cambios al stage y hacemos un commit de la feature (Jorge)
+```
+git commit -am "Añadida funcionalidad de comprobación de año no válido"
+```
+4. Hacemos push de la rama feature (Jorge)
+```
+git push origin feature1/año-no-valido
+```
