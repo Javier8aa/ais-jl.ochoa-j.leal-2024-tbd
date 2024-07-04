@@ -131,7 +131,6 @@ public class FilmUITest {
         driver.findElement(By.id("Save")).click();
 
         this.wait.until(ExpectedConditions.textToBe(By.id("film-title"), title));
-        //Prueba
     }*/
 
     @Test

@@ -4,6 +4,7 @@ on:
   push:
     branches-ignore:
       - trunk
+
     paths:
       - 'src/**'
       - 'pom.xml'
