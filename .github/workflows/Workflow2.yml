@@ -5,7 +5,6 @@ on:
     branches:
       - trunk
     types: [ opened ]
-  workflow_dispatch:
 
 jobs:
   test:
