@@ -5,8 +5,8 @@ on:
     branches:
       - trunk
     paths:
-      - src/
-      - pom.xml
+      - 'src/**'
+      - 'pom.xml'
 
   workflow_dispatch:
 
