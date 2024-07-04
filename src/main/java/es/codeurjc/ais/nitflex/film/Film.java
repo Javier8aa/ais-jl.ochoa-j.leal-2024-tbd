@@ -12,7 +12,6 @@ public class Film {
     @Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id = null;
-
     private String title;
 	
 	@Column(length = 50000)
