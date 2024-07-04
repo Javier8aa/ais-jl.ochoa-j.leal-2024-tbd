@@ -1,9 +1,9 @@
 name: Workflow3_Docker_Azure
 
 on:
-  create:
+  push:
     branches:
-      - release/**
+      - trunk
     paths:
       - src/
       - pom.xml
