@@ -51,7 +51,7 @@ jobs:
           uses: actions/checkout@v4
 
         - name: 'Generate tag'
-          run: echo "tag=dev-$(date + '%Y%m%d.%H%M%S')" >> $GITHUB_ENV
+          run: echo "tag=dev-$(date +'%Y%m%d.%H%M%S')" >> $GITHUB_ENV
           id: timestamp
 
         - name: 'Generate Docker image'
