@@ -22,16 +22,32 @@ $ git clone https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd.git
 ```
 
 2. Creamos rama para la feature (Jorge)
-
+```
 git checkout -b  feature/validate-movie-year
-
+```
 3. Añadimos los cambios al stage y hacemos un commit de la feature (Jorge)
-
+```
 git commit -am "Añadida funcionalidad de comprobación de año no válido"
-
+```
 
 4. Hacemos push de la rama feature (Jorge)
-
+```
 git push origin feature/validate-movie-year
 ```
-Ejecución Workflow1 [Workflow 1](https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd/actions/runs/9806245806)
+Ejecución [Workflow 1](https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd/actions/runs/9806245806)
+
+Los siguientes 3 pasos (6, 7 y 8) son necesarios para el correcto etiquetado siguiendo el formato semver, sin embargo, como nos has comentado en el correo, como en nuestro caso, el error "RegistryErrorResponse" sucede al cambiar la version del pom ya que nuestro contenedor es previo al cambio de políticas seguiremos la practica sin cambiar la versión del Pom pero indicando como debería hacerse
+6. Realizamos un cambio de version en el Pom siguiendo semver (version 0.2.0) (Jorge)
+```
+$ git add .
+```
+
+7. Realizamos el commit de la version del Pom (Jorge)
+```
+$ git commit -m "Semver version 0.2.0"
+```
+
+8. Realizamos el push de la version del Pom (Jorge)
+```
+git push origin feature/validate-movie-year
+```
