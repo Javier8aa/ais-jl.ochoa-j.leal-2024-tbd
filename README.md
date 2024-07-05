@@ -16,7 +16,20 @@ Una vez creados los workflows y funcionando estos, pasamos a crear la nueva func
 
 Clonamos el repositorio
  
-1. Clonamos los repositorios
+1. Clonamos el repositorio
 ```
 $ git clone https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd.git
+```
+
+2. Creamos rama para la feature (Jorge)
+
+git checkout -b  feature/validate-movie-year
+
+3. Añadimos los cambios al stage y hacemos un commit de la feature (Jorge)
+
+git commit -am "Añadida funcionalidad de comprobación de año no válido"
+
+4. Hacemos push de la rama feature (Jorge)
+
+git push origin feature/validate-movie-year
 ```

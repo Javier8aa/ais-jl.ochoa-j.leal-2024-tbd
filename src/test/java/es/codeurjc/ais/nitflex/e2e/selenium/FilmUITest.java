@@ -109,13 +109,39 @@ public class FilmUITest {
         assertEquals(title, filmTitle.getText().trim().replaceAll("\\s+", " "));
     }
 
+    /*@Test
+    @DisplayName("Añadir una nueva película y comprobar que se ha creado")
+    public void createFilmTest() throws Exception {
+        // GIVEN
+        this.driver.get("http://localhost:" + this.port + "/");
+
+        // WHEN
+        String title = "Spider-Man: No Way Home";
+        String synopsis = "Peter Parker es desenmascarado y por tanto no es capaz de separar su vida normal de los enormes riesgos que conlleva ser un súper héroe.";
+        String url = "https://www.themoviedb.org/t/p/w220_and_h330_face/osYbtvqjMUhEXgkuFJOsRYVpq6N.jpg";
+        String year = "2021";
+
+        driver.findElement(By.xpath("//*[text()='New film']")).click();
+
+        driver.findElement(By.name("title")).sendKeys(title);
+        driver.findElement(By.name("url")).sendKeys(url);
+        driver.findElement(By.name("releaseYear")).sendKeys(year);
+        driver.findElement(By.name("synopsis")).sendKeys(synopsis);
+
+        driver.findElement(By.id("Save")).click();
+
+        this.wait.until(ExpectedConditions.textToBe(By.id("film-title"), title));
+    }*/
+
     @Test
     public void testGuardar() {
-        driver.get("http://localhost:" + this.port + "/");
+        driver.get("http://localhost:" + this.port + "/"); // Accedemos a la pagina web de nuestra aplicación
 
+        // Wait for the 'create-film' button to be clickable and click it
         WebElement createFilmButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("create-film")));
         createFilmButton.click();
 
+        // Wait for the form fields to be visible and interact with them
         WebElement titulo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("title")));
         titulo.sendKeys("La Vida De Pi");
 
@@ -131,13 +157,16 @@ public class FilmUITest {
         WebElement saveButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("Save")));
         saveButton.click();
 
+        // Wait for the saved film title to be visible and assert its text
         WebElement tituloGuardado = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("film-title")));
         String actualTitle = tituloGuardado.getText().trim().replaceAll("\\s+", " ");
         assertEquals("La Vida De Pi", actualTitle);
 
+        // Wait for the 'all-films' button to be clickable and click it
         WebElement allFilmsButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("all-films")));
         allFilmsButton.click();
 
+        // Assert that the saved film is present in the film list
         WebElement filmLink = wait.until(ExpectedConditions.visibilityOfElementLocated(By.partialLinkText("La Vida De Pi")));
         assertNotNull(filmLink);
     }
@@ -146,9 +175,11 @@ public class FilmUITest {
     public void testBorrar() {
         driver.get("http://localhost:" + this.port + "/");
 
+        // Wait for the 'create-film' button to be clickable and click it
         WebElement createFilmButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("create-film")));
         createFilmButton.click();
 
+        // Wait for the form fields to be visible and interact with them
         WebElement title = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("title")));
         title.sendKeys("Interestelar");
 
@@ -164,24 +195,70 @@ public class FilmUITest {
         WebElement saveButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("Save")));
         saveButton.click();
 
+        // Wait for the 'all-films' button to be clickable and click it
         WebElement allFilmsButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("all-films")));
         allFilmsButton.click();
 
+        // Wait for the created film link to be clickable and click it
         WebElement filmLink = wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Interestelar")));
         filmLink.click();
 
+        // Wait for the 'remove-film' button to be clickable and click it
         WebElement removeButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("remove-film")));
         removeButton.click();
 
+        // Wait for the confirmation message to be visible and assert its text
         WebElement message = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("message")));
         String actualMessage = message.getText().trim().replaceAll("\\s+", " ");
         assertEquals("Film 'Interestelar' deleted", actualMessage);
 
+        // Wait for the 'all-films' button to be clickable and click it
         WebElement allFilmsButtonAfterDelete = wait.until(ExpectedConditions.elementToBeClickable(By.id("all-films")));
         allFilmsButtonAfterDelete.click();
 
+        // Wait for the absence of the deleted film link and assert it is not present
         boolean filmStillExists = wait.until(ExpectedConditions.invisibilityOfElementLocated(By.partialLinkText("Interestelar")));
         assertTrue(filmStillExists);
     }
 
+    @Test
+    @DisplayName("Intentar añadir una nueva película con un año no válido y verificar que no se crea")
+    public void createFilmInvalidYearTest() throws Exception {
+        // GIVEN
+        this.driver.get("http://localhost:" + this.port + "/");
+
+        // WHEN
+        String title = "The Boxing Cats (Prof. Welton's)";
+        String synopsis = "Un peculiar combate de boxeo... entre gatosº ";
+        String url = "https://pics.filmaffinity.com/the_boxing_cats_prof_welton_s-778652309-mmed.jpg";
+        String invalidYear = "1894";
+
+        WebElement newFilmButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[text()='New film']")));
+        newFilmButton.click();
+
+        WebElement titleInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("title")));
+        titleInput.sendKeys(title);
+
+        WebElement urlInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("url")));
+        urlInput.sendKeys(url);
+
+        WebElement releaseYearInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("releaseYear")));
+        releaseYearInput.sendKeys(invalidYear);
+
+        WebElement synopsisInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("synopsis")));
+        synopsisInput.sendKeys(synopsis);
+
+        WebElement saveButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("Save")));
+        saveButton.click();
+
+        // THEN
+        WebElement errorMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("message")));
+        assertEquals("The year is invalid: should be since 1895", errorMessage.getText().trim());
+
+        WebElement allFilmsButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("all-films")));
+        allFilmsButton.click();
+
+        boolean filmStillExists = wait.until(ExpectedConditions.invisibilityOfElementLocated(By.partialLinkText(title)));
+        assertTrue(filmStillExists);
+    }
 }
