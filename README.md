@@ -20,3 +20,8 @@ Clonamos el repositorio
 ```
 $ git clone https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd.git
 ```
+
+2. Creamos rama del fix (Javier)
+```
+$ git checkout -b fix/cancel-button-bug
+```
