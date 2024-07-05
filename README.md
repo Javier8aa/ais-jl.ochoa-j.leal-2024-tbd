@@ -25,3 +25,19 @@ $ git clone https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd.git
 ```
 $ git checkout -b fix/cancel-button-bug
 ```
+
+3. Añadimos arreglo bug y test del fix (Javier)
+```
+$ git add .
+```
+
+4. Realizamos el commit del fix (Javier)
+```
+$ git commit -m "Fix cancel button bug and add regression test"
+```
+
+5. Realizamos el push del fix (Javier)
+```
+git push origin fix-cancel-edition-1
+```
+Ejecución Workflow1 [Workflow 1](https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd/actions/runs/9806163658)
