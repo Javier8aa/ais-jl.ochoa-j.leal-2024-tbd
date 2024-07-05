@@ -21,33 +21,90 @@ Clonamos el repositorio
 $ git clone https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd.git
 ```
 
-2. Creamos rama para la feature (Jorge)
+2. Creamos rama del fix (Javier)
+```
+$ git checkout -b fix/cancel-button-bug
+```
+
+3. Creamos rama para la feature (Jorge)
 ```
 git checkout -b  feature/validate-movie-year
 ```
-3. Añadimos los cambios al stage y hacemos un commit de la feature (Jorge)
+
+4. Añadimos arreglo bug y test del fix (Javier)
+```
+$ git add .
+```
+
+5. Realizamos el commit del fix (Javier)
+```
+$ git commit -m "Fix cancel button bug and add regression test"
+```
+
+6. Añadimos los cambios al stage y hacemos un commit de la feature (Jorge)
 ```
 git commit -am "Añadida funcionalidad de comprobación de año no válido"
 ```
 
-4. Hacemos push de la rama feature (Jorge)
+5. Realizamos el push del fix (Javier)
+```
+git push origin fix/cancel-button-bug
+```
+Ejecución Workflow1 [Workflow 1](https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd/actions/runs/9806163658)
+
+Los siguientes 3 pasos (6, 7 y 8) son necesarios para el correcto etiquetado siguiendo el formato semver, sin embargo, como nos has comentado en el correo, como en nuestro caso, el error "RegistryErrorResponse" sucede al cambiar la version del pom ya que nuestro contenedor es previo al cambio de políticas seguiremos la practica sin cambiar la versión del Pom pero indicando como debería hacerse
+6. Realizamos un cambio de version en el Pom siguiendo semver (version 0.1.1) (Javier)
+```
+$ git add .
+```
+
+7. Realizamos el commit de la version del Pom (Javier)
+```
+$ git commit -m "Semver version 0.1.1"
+```
+
+8. Realizamos el push de la version del Pom (Javier)
+```
+git push origin fix/cancel-button-bug
+```
+Aqui deberia ejecutarse nuevamente el Workflow 1, pero en nuestro caso al no modificar el pom no se ejecuta
+
+9. Hacemos push de la rama feature (Jorge)
 ```
 git push origin feature/validate-movie-year
 ```
 Ejecución [Workflow 1](https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd/actions/runs/9806245806)
 
 Los siguientes 3 pasos (6, 7 y 8) son necesarios para el correcto etiquetado siguiendo el formato semver, sin embargo, como nos has comentado en el correo, como en nuestro caso, el error "RegistryErrorResponse" sucede al cambiar la version del pom ya que nuestro contenedor es previo al cambio de políticas seguiremos la practica sin cambiar la versión del Pom pero indicando como debería hacerse
-6. Realizamos un cambio de version en el Pom siguiendo semver (version 0.2.0) (Jorge)
+10. Realizamos un cambio de version en el Pom siguiendo semver (version 0.2.0) (Jorge)
 ```
 $ git add .
 ```
 
-7. Realizamos el commit de la version del Pom (Jorge)
+11. Realizamos el commit de la version del Pom (Jorge)
 ```
 $ git commit -m "Semver version 0.2.0"
 ```
 
-8. Realizamos el push de la version del Pom (Jorge)
+12. Realizamos el push de la version del Pom (Jorge)
 ```
 git push origin feature/validate-movie-year
 ```
+
+13. Abrimos un pull request del fix (Javier)
+
+Pull request [Pull Request](https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd/pull/9)
+
+Ejecución Workflow2 [Workflow 2](https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd/actions/runs/9806576053)
+
+14. Hacemos el merge del pull request del fix (Javier)
+
+Ejecución Workflow 3 [Workflow 3](https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd/actions/runs/9806605015)
+
+Imagen Docker con tag: [Imagen Docker Hub Tag](https://hub.docker.com/layers/jorgexleal/nitflex/0.1.0/images/sha256-db0b5de4ef90def97c1eedb86dc53861b64392385fbd095ba48ecdd9ffe93e40?context=repo)
+
+Como se puede observar, el tag de la imagen continua siendo 0.1.0, pero de haber modificado el pom, deberia ser 0.1.1 y por tanto mostrarse así en el tag de la imagen Docker
+
+Captura de la aplicación desplegada tras el fix:
+
+![DespliegueApp_Fix](src/main/resources/static/images/DespliegueAplicacion_trasFix.png "DespliegueApp_Fix")
