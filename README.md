@@ -15,7 +15,7 @@ Por lo que la práctica 5 comienza tras el commit "Readme actualizado previo P5"
 Una vez creados los workflows y funcionando estos, pasamos a crear la nueva funcionalidad utilizando GithubFlow:
 
 Clonamos el repositorio
-
+ 
 1. Clonamos los repositorios
 ```
 $ git clone https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd.git
