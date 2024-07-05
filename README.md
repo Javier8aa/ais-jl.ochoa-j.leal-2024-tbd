@@ -59,3 +59,21 @@ $ git commit -m "Semver version 0.1.1"
 git push origin fix/cancel-button-bug
 ```
 Aqui deberia ejecutarse nuevamente el Workflow 1, pero en nuestro caso al no modificar el pom no se ejecuta
+
+9. Abrimos un pull request del fix (Javier)
+
+Pull request [Pull Request](https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd/pull/9)
+
+Ejecución Workflow2 [Workflow 2](https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd/actions/runs/9806576053)
+
+10. Hacemos el merge del pull request del fix (Javier)
+
+Ejecución Workflow 3 [Workflow 3](https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd/actions/runs/9806605015)
+
+Imagen Docker con tag: [Imagen Docker Hub Tag](https://hub.docker.com/layers/jorgexleal/nitflex/0.1.0/images/sha256-db0b5de4ef90def97c1eedb86dc53861b64392385fbd095ba48ecdd9ffe93e40?context=repo)
+
+Como se puede observar, el tag de la imagen continua siendo 0.1.0, pero de haber modificado el pom, deberia ser 0.1.1 y por tanto mostrarse así en el tag de la imagen Docker
+
+Captura de la aplicación desplegada tras el fix:
+
+![DespliegueApp_Fix](src/main/resources/static/images/DespliegueAplicacion_trasFix.png "DespliegueApp_Fix")
