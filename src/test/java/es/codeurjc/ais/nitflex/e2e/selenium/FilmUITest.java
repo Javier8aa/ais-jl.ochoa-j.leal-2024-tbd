@@ -184,4 +184,42 @@ public class FilmUITest {
         assertTrue(filmStillExists);
     }
 
+    @Test
+    public void editarTest() {
+        driver.get("http://localhost:" + this.port + "/");
+
+        WebElement createFilmButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("create-film")));
+        createFilmButton.click();
+
+        WebElement titulo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("title")));
+        titulo.sendKeys("Torrente");
+
+        WebElement releaseYear = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("releaseYear")));
+        releaseYear.sendKeys("2014");
+
+        WebElement url = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("url")));
+        url.sendKeys("https://as01.epimg.net/deporteyvida/imagenes/2017/10/17/portada/1508244075_414775_1508244230_noticia_normal.jpg");
+
+        WebElement synopsis = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("synopsis")));
+        synopsis.sendKeys("Simplemente TORRENTE");
+
+        WebElement saveButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("Save")));
+        saveButton.click();
+
+        WebElement allFilmsButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("all-films")));
+        allFilmsButton.click();
+
+        WebElement filmLink = wait.until(ExpectedConditions.visibilityOfElementLocated(By.partialLinkText("Torrente")));
+        filmLink.click();
+
+        WebElement editButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("edit-film")));
+        editButton.click();
+
+        WebElement cancelButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"new-book\"]/form/p/button")));
+        cancelButton.click();
+
+        WebElement allFilmsButtonAfterCancel = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("all-films")));
+        assertNotNull(allFilmsButtonAfterCancel);
+    }
+
 }
