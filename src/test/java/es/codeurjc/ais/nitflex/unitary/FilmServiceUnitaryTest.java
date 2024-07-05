@@ -48,13 +48,13 @@ public class FilmServiceUnitaryTest {
 
         Film book = new Film("FAKE FILM", "FAKE DESCRIPTION", 1900, "FAKE URL");
 
-        //Given
+        // Given
         when(repositorioMock.save(book)).thenReturn(book);
 
-        //When
+        // When
         filmService.save(book);
 
-        //Then
+        // Then
         verify(repositorioMock, times(1)).save(book);
         verify(urlMock, times(1)).checkValidImageURL("FAKE URL");
         verify(notificacionMock).notify("Film Event: Film with title=" + book.getTitle() + " was created");
@@ -62,32 +62,34 @@ public class FilmServiceUnitaryTest {
 
     @Test
     public void testGuardarPeliculaURLCorrecta() {
-        //GIVEN
+        //                              GIVEN
         Film pelicula = new Film();
-        pelicula.setUrl("https://www.urjc.es/images/Covers/cover_intranet_urjc.jpg");
+        pelicula.setUrl("https://www.urjc.es/images/Covers/cover_intranet_urjc.jpg");   // Creamos una película con URL correcta
         pelicula.setTitle("Prueba");
+        pelicula.setReleaseYear(2020);
 
-        //WHEN
+        //                              WHEN
         doNothing().when(urlMock).checkValidImageURL(pelicula.getUrl());
-        when(repositorioMock.save(any(Film.class))).thenReturn(pelicula);
+        when(repositorioMock.save(any(Film.class))).thenReturn(pelicula);               //Cuando se guarde cualquier pelicula, deberá devolver la película guardada
         doNothing().when(notificacionMock).notify(anyString());
-
-        assertDoesNotThrow(() -> {
+        // Aserciones
+        assertDoesNotThrow(() -> {                                                      //Comprobamos que se puede ejecutar sin lanzar ninguna excepción
             savedFilm = filmService.save(pelicula);
         });
-        assertEquals(pelicula, savedFilm);
-        //THEN
-        verify(urlMock, times(1)).checkValidImageURL(pelicula.getUrl());
-        verify(notificacionMock, times(1)).notify("Film Event: Film with title="+pelicula.getTitle()+" was created");
-        verify(repositorioMock,times(1)).save(pelicula);
+        assertEquals(pelicula, savedFilm);                                              //Comparamos la pelicula con la pelicula guardada
+        //                              THEN
+        verify(urlMock, times(1)).checkValidImageURL(pelicula.getUrl());    // Verificamos que se llama a checkValidImageURL, se llama 2 veces, en el save y en el assetDoesNotThrow
+        verify(notificacionMock, times(1)).notify("Film Event: Film with title="+pelicula.getTitle()+" was created");   //Comprobamos que se llama a notificación 1 vez, al guardar
+        verify(repositorioMock,times(1)).save(pelicula);                    //Verificamos que se llama a guardar una película 1 vez
     }
 
     @Test
     public void testGuardarPeliculaURLErronea() {
-        //GIVEN
+        //                              GIVEN
         Film pelicula = new Film();
-        pelicula.setUrl("esto-no-es-una-url");
+        pelicula.setUrl("esto-no-es-una-url");         // Creamos una película con URL incorrecta
         pelicula.setTitle("Prueba");
+        pelicula.setReleaseYear(2020);
 
         //WHEN
         doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "400 BAD_REQUEST \"The url format is not valid\""))
@@ -100,4 +102,26 @@ public class FilmServiceUnitaryTest {
         verify(notificacionMock, never()).notify(anyString());
     }
 
+    @Test
+    @DisplayName("No se debe permitir crear una película con un año anterior a 1895")
+    public void testGuardarPeliculaConAnoNoValido() {
+        //GIVEN
+        Film pelicula = new Film();
+        pelicula.setTitle("Pelicula Invalida");
+        pelicula.setReleaseYear(1800); // Año no válido
+        pelicula.setUrl("https://www.urjc.es/images/Covers/cover_intranet_urjc.jpg");
+
+        //WHEN
+        doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "400 BAD_REQUEST \"The year is invalid: should be since 1895\""))
+                .when(repositorioMock).save(pelicula);
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> {
+            filmService.save(pelicula);
+        });
+
+        //THEN
+        assertEquals("400 BAD_REQUEST \"The year is invalid: should be since 1895\"", ex.getMessage());
+        verify(repositorioMock, never()).save(pelicula);
+        verify(notificacionMock, never()).notify(anyString());
+    }
 }

@@ -10,11 +10,9 @@ import org.springframework.web.server.ResponseStatusException;
 import es.codeurjc.ais.nitflex.notification.NotificationService;
 import es.codeurjc.ais.nitflex.utils.UrlUtils;
 
-/* Este servicio se usará para incluir la funcionalidad que sea 
+/* Este servicio se usará para incluir la funcionalidad que sea
  * usada desde el FilmRestController y el FilmWebController
  */
-
-
 @Service
 public class FilmService {
 
@@ -31,7 +29,7 @@ public class FilmService {
 	public Optional<Film> findOne(long id) {
 		return repository.findById(id);
 	}
-	
+
 	public boolean exist(long id) {
 		return repository.existsById(id);
 	}
@@ -44,6 +42,9 @@ public class FilmService {
 		if (film.getTitle() == "") {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The title is empty");
 		}
+		if (film.getReleaseYear() < 1895) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The year is invalid: should be since 1895");
+		}
 		urlUtils.checkValidImageURL(film.getUrl());
 		Film newFilm = repository.save(film);
 		notificationService.notify("Film Event: Film with title="+newFilm.getTitle()+" was created");
@@ -54,4 +55,5 @@ public class FilmService {
 		repository.deleteById(id);
 		notificationService.notify("Film Event: Film with id="+id+" was deleted");
 	}
+
 }

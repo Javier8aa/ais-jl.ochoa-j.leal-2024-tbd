@@ -78,10 +78,10 @@ public class FilmUITest {
     @Test
     @DisplayName("Añadir una nueva película y comprobar que se ha creado")
     public void createFilmTest() throws Exception {
-        // GIVEN
+        //GIVEN
         this.driver.get("http://localhost:" + this.port + "/");
 
-        // WHEN
+        //WHEN
         String title = "Spider-Man: No Way Home";
         String synopsis = "Peter Parker es desenmascarado y por tanto no es capaz de separar su vida normal de los enormes riesgos que conlleva ser un súper héroe.";
         String url = "https://www.themoviedb.org/t/p/w220_and_h330_face/osYbtvqjMUhEXgkuFJOsRYVpq6N.jpg";
@@ -113,8 +113,10 @@ public class FilmUITest {
     public void testGuardar() {
         driver.get("http://localhost:" + this.port + "/");
 
+
         WebElement createFilmButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("create-film")));
         createFilmButton.click();
+
 
         WebElement titulo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("title")));
         titulo.sendKeys("La Vida De Pi");
@@ -222,4 +224,44 @@ public class FilmUITest {
         assertNotNull(allFilmsButtonAfterCancel);
     }
 
+    @Test
+    @DisplayName("Intentar añadir una nueva película con un año no válido y verificar que no se crea")
+    public void createFilmInvalidYearTest() throws Exception {
+        // GIVEN
+        this.driver.get("http://localhost:" + this.port + "/");
+
+        // WHEN
+        String title = "The Boxing Cats (Prof. Welton's)";
+        String synopsis = "Un peculiar combate de boxeo... entre gatosº ";
+        String url = "https://pics.filmaffinity.com/the_boxing_cats_prof_welton_s-778652309-mmed.jpg";
+        String invalidYear = "1894";
+
+        WebElement newFilmButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[text()='New film']")));
+        newFilmButton.click();
+
+        WebElement titleInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("title")));
+        titleInput.sendKeys(title);
+
+        WebElement urlInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("url")));
+        urlInput.sendKeys(url);
+
+        WebElement releaseYearInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("releaseYear")));
+        releaseYearInput.sendKeys(invalidYear);
+
+        WebElement synopsisInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("synopsis")));
+        synopsisInput.sendKeys(synopsis);
+
+        WebElement saveButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("Save")));
+        saveButton.click();
+
+        // THEN
+        WebElement errorMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("message")));
+        assertEquals("The year is invalid: should be since 1895", errorMessage.getText().trim());
+
+        WebElement allFilmsButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("all-films")));
+        allFilmsButton.click();
+
+        boolean filmStillExists = wait.until(ExpectedConditions.invisibilityOfElementLocated(By.partialLinkText(title)));
+        assertTrue(filmStillExists);
+    }
 }
