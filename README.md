@@ -6,10 +6,17 @@ Autor(es): Jorge Leal & Javier Laureano Ochoa
 
 [Aplicación Azure](http://nitflex-jljlo.westeurope.azurecontainer.io:8080/)
 
-Antes de comenzar la practica 5, y con ello el fix y la funcionalidad, hicimos varias pruebas para verificar el correcto funcionamiento de los workflows, desencadenando así algún pull-request, push...
+Antes de comenzar la practica 5, y con ello el fix y la funcionalidad, hicimos varias pruebas para verificar el correcto funcionamiento de los workflows, desencadenando así algún action invalido debido a fallos en azure con semver
 
+Por lo que la práctica 5 comienza tras el commit "Readme actualizado previo P5" y la etiqueta de git
 
+## Desarrollo con GitHubFlow (Práctica 5)
 
+Una vez creados los workflows y funcionando estos, pasamos a crear la nueva funcionalidad utilizando GithubFlow:
 
+Clonamos el repositorio
 
+1. Clonamos los repositorios
 
+$ git clone https://github.com/Javier8aa/ais-jl.ochoa-j.leal-2024-tbd.git
+....
