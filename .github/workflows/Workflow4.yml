@@ -1,5 +1,7 @@
 name: Workflow4_CronTrunk
 
+on:
+  workflow_dispatch:
 
 jobs:
   build:
